@@ -21,36 +21,26 @@
       {% endif %}
     {% endwith %}
     <form method="POST" class="space-y-5" autocomplete="off">
-      {{ form.hidden_tag() }}
       <div>
         <label for="nombre" class="block text-[#164399] font-bold mb-1">Nombre</label>
         <div class="relative">
           <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
-          {{ form.nombre(class_="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-lg bg-[#f6f8fc] text-gray-900 focus:ring-2 focus:ring-[#276EF1] focus:border-[#276EF1] transition", id="nombre", placeholder="Tu nombre") }}
+          <input id="naombre" name="nombre" type="text" class="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-lg bg-[#f6f8fc] text-gray-900 focus:ring-2 focus:ring-[#276EF1] focus:border-[#276EF1] transition" placeholder="Tu nombre" required>
         </div>
-        {% if form.nombre.errors %}
-          <div class="text-red-600 text-xs mt-1">{{ form.nombre.errors[0] }}</div>
-        {% endif %}
       </div>
       <div>
         <label for="email" class="block text-[#164399] font-bold mb-1">Correo electrónico</label>
         <div class="relative">
           <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
-          {{ form.email(class_="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-lg bg-[#f6f8fc] text-gray-900 focus:ring-2 focus:ring-[#276EF1] focus:border-[#276EF1] transition", id="email", placeholder="Tu email") }}
+          <input id="email" name="email" type="email" class="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-lg bg-[#f6f8fc] text-gray-900 focus:ring-2 focus:ring-[#276EF1] focus:border-[#276EF1] transition" placeholder="Tu email" required>
         </div>
-        {% if form.email.errors %}
-          <div class="text-red-600 text-xs mt-1">{{ form.email.errors[0] }}</div>
-        {% endif %}
       </div>
       <div>
         <label for="mensaje" class="block text-[#164399] font-bold mb-1">Mensaje</label>
         <div class="relative">
           <i class="fas fa-comment-dots absolute left-3 top-4 text-gray-400"></i>
-          {{ form.mensaje(class_="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-lg bg-[#f6f8fc] text-gray-900 focus:ring-2 focus:ring-[#276EF1] focus:border-[#276EF1] transition resize-none", id="mensaje", placeholder="Escribe tu mensaje aquí...", rows="4") }}
+          <textarea id="mensaje" name="mensaje" rows="4" class="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-lg bg-[#f6f8fc] text-gray-900 focus:ring-2 focus:ring-[#276EF1] focus:border-[#276EF1] transition resize-none" placeholder="Escribe tu mensaje aquí..." required></textarea>
         </div>
-        {% if form.mensaje.errors %}
-          <div class="text-red-600 text-xs mt-1">{{ form.mensaje.errors[0] }}</div>
-        {% endif %}
       </div>
       <button type="submit" class="w-full py-3 bg-[#276EF1] hover:bg-[#1E5BB8] text-white font-bold rounded-lg shadow transition transform hover:scale-105 flex items-center justify-center gap-2">
         <i class="fas fa-paper-plane"></i> Enviar mensaje

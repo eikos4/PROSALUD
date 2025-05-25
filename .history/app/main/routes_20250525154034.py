@@ -1,12 +1,9 @@
 # app/routes/main.py
 
-from flask import Blueprint, abort, render_template, request, flash, redirect, url_for
+from flask import Blueprint, abort, render_template, request
 from sqlalchemy import or_
-from app.models import ContactMessage, User
-from app import db
+from app.models import User
 
-# Agrega este import si usas Flask-WTF
-from app.forms import ContactForm
 main = Blueprint('main', __name__)
 
 # === Home / Landing page ===
@@ -25,9 +22,7 @@ def search():
             User.username.ilike(f'%{q}%'),
             User.category.ilike(f'%{q}%'),
             User.description.ilike(f'%{q}%')
-        ),
-        User.role == 'professional',      # SOLO profesionales
-        User.active == True               # SOLO activos
+        )
     ).all()
     return render_template('main/search.html', query=q, results=results)
 
@@ -40,7 +35,7 @@ def public_profile(id):
     Solo muestra si el usuario está activo y es profesional.
     """
     user = User.query.get_or_404(id)
-    if not user.active or user.role != 'professional':
+    if not user.is_active or user.role != 'professional':
         abort(404)
     return render_template('main/public_profile.html', user=user)
 
@@ -53,22 +48,13 @@ def terms():
 # === Página de contacto ===
 @main.route('/contacto', methods=['GET', 'POST'])
 def contacto():
-    form = ContactForm()
-    if form.validate_on_submit():
-        # Guardar en la tabla
-        mensaje = ContactMessage(
-            nombre=form.nombre.data,
-            email=form.email.data,
-            mensaje=form.mensaje.data
-        )
-        db.session.add(mensaje)
-        db.session.commit()
-        flash('¡Tu mensaje fue enviado correctamente!', 'success')
-        return redirect(url_for('main.contacto'))
-    return render_template('main/contacto.html', form=form)
+    """
+    Página de contacto (puedes añadir lógica de formulario aquí si lo deseas).
+    """
+    return render_template('main/contacto.html')
 
 # === Listado público de profesionales ===
-@main.route('/public_professionals')
+@main.route('main/public_professionals')
 def public_professionals():
     """
     Lista de todos los profesionales activos y visibles.

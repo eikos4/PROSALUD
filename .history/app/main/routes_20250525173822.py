@@ -2,9 +2,7 @@
 
 from flask import Blueprint, abort, render_template, request, flash, redirect, url_for
 from sqlalchemy import or_
-from app.models import ContactMessage, User
-from app import db
-
+from app.models import User
 # Agrega este import si usas Flask-WTF
 from app.forms import ContactForm
 main = Blueprint('main', __name__)

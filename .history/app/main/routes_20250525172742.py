@@ -2,11 +2,9 @@
 
 from flask import Blueprint, abort, render_template, request, flash, redirect, url_for
 from sqlalchemy import or_
-from app.models import ContactMessage, User
-from app import db
+from app.models import User
+from app.forms import ContactForm  # Agrega este import si usas Flask-WTF
 
-# Agrega este import si usas Flask-WTF
-from app.forms import ContactForm
 main = Blueprint('main', __name__)
 
 # === Home / Landing page ===
@@ -53,17 +51,13 @@ def terms():
 # === Página de contacto ===
 @main.route('/contacto', methods=['GET', 'POST'])
 def contacto():
+    """
+    Página de contacto. Usa WTForms para CSRF y validación.
+    """
     form = ContactForm()
     if form.validate_on_submit():
-        # Guardar en la tabla
-        mensaje = ContactMessage(
-            nombre=form.nombre.data,
-            email=form.email.data,
-            mensaje=form.mensaje.data
-        )
-        db.session.add(mensaje)
-        db.session.commit()
-        flash('¡Tu mensaje fue enviado correctamente!', 'success')
+        # Procesa el mensaje (por ejemplo, envía email o guarda en base de datos)
+        flash('Tu mensaje fue enviado correctamente. Te responderemos pronto.', 'success')
         return redirect(url_for('main.contacto'))
     return render_template('main/contacto.html', form=form)
 
