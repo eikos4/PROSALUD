@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Inicio – IndepWork{% endblock %}
+
+{% block content %}
+  <!-- Hero Section -->
+  <section class="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-276EF1 via-1E5BB8 to-1C4EB9">
+    <div class="text-center px-4">
+      <h1 class="text-5xl font-extrabold mb-4 text-white">Conecta con servicios independientes</h1>
+      <p class="text-lg mb-8 text-gray-100">Profesionales de todos los rubros, en un solo lugar.</p>
+      <div class="space-x-4">
+        <a href="{{ url_for('main.search') }}"
+           class="px-6 py-3 bg-276EF1 hover:bg-1E5BB8 text-white rounded-lg font-semibold transition">
+          Buscar Servicios
+        </a>
+        <a href="{{ url_for('auth.register') }}"
+           class="px-6 py-3 border-2 border-FF8800 hover:border-CC7700 text-FF8800 rounded-lg font-semibold transition">
+          Publicar Mi Servicio
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary Section -->
+  <section class="py-16 bg-gray-100">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-333333 text-center mb-8">¿Qué es IndepWork?</h2>
+      <div class="grid gap-8 md:grid-cols-3 text-center">
+        <div>
+          <div class="mb-4">
+            <!-- ícono o SVG -->
+            <svg class="mx-auto h-12 w-12 text-276EF1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-333333 mb-2">Publica fácilmente</h3>
+          <p class="text-gray-600">Crea tu perfil y muestra tu experiencia en minutos.</p>
+        </div>
+        <div>
+          <div class="mb-4">
+            <svg class="mx-auto h-12 w-12 text-276EF1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-333333 mb-2">Encuentra profesionales</h3>
+          <p class="text-gray-600">Busca por categoría o palabra clave y filtra resultados.</p>
+        </div>
+        <div>
+          <div class="mb-4">
+            <svg class="mx-auto h-12 w-12 text-276EF1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v12h18V3" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-333333 mb-2">Comunicación integrada</h3>
+          <p class="text-gray-600">Chatea directamente con clientes y profesionales.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-333333 text-center mb-8">Lo que dicen nuestros usuarios</h2>
+      <div class="grid gap-8 md:grid-cols-2">
+        <div class="bg-gray-50 p-6 rounded-lg shadow">
+          <p class="text-gray-700 mb-4">"IndepWork me ayudó a encontrar clientes rápidamente. ¡La plataforma es muy intuitiva!"</p>
+          <h3 class="text-lg font-semibold text-276EF1">María López</h3>
+          <p class="text-sm text-gray-500">Diseñadora gráfica</p>
+        </div>
+        <div class="bg-gray-50 p-6 rounded-lg shadow">
+          <p class="text-gray-700 mb-4">"Publicar mis servicios fue muy sencillo y pagué sin complicaciones. ¡100% recomendado!"</p>
+          <h3 class="text-lg font-semibold text-276EF1">Juan Pérez</h3>
+          <p class="text-sm text-gray-500">Electricista</p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

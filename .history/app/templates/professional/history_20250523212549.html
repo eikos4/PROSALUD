@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Historial de servicios{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2>Historial de servicios prestados</h2>
+  {% if servicios %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Servicio</th>
+          <th>Fecha</th>
+          <th>Evaluación</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in servicios %}
+        <tr>
+          <td>{{ item.client.username }}</td>
+          <td>{{ item.service.title }}</td>
+          <td>{{ item.date_requested.strftime('%d-%m-%Y') }}</td>
+          <td>
+            {% if item.evaluation %}
+              {{ item.evaluation.rating }} / 5<br>
+              {{ item.evaluation.comment }}
+            {% else %}
+              <span class="text-muted">Sin evaluación</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">Aún no has completado servicios.</div>
+  {% endif %}
+</div>
+{% endblock %}

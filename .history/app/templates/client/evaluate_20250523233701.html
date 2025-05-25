@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Evaluar servicio{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto py-10">
+  <h2 class="text-2xl font-bold mb-6 text-[#276EF1]">Evaluar a {{ professional.username }}</h2>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-4">
+      {{ form.rating.label(class_="block text-gray-700 mb-1") }}
+      {{ form.rating(class_="form-control w-full") }} <!-- Aquí puedes poner estrellas -->
+    </div>
+    <div class="mb-4">
+      {{ form.comment.label(class_="block text-gray-700 mb-1") }}
+      {{ form.comment(class_="form-control w-full") }}
+    </div>
+    <button type="submit" class="bg-[#FF8800] text-white py-2 px-6 rounded font-bold">Enviar evaluación</button>
+  </form>
+</div>
+{% endblock %}

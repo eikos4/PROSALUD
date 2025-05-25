@@ -1,0 +1,102 @@
+<!-- app/templates/auth/login.html -->
+{% extends 'base.html' %}
+{% block title %}Iniciar Sesión – IndepWork{% endblock %}
+
+{% block content %}
+<div class="min-h-screen relative bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/fondo3.png') }}')">
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/60"></div>
+
+  <div class="relative z-10 flex flex-col lg:flex-row items-center justify-center min-h-screen px-4">
+    <!-- Login Form -->
+    <div class="w-full max-w-md bg-white bg-opacity-90 p-8 rounded-xl shadow-lg backdrop-blur-sm">
+      <h2 class="text-3xl font-bold text-[#333333] mb-6 text-center">IndepWork</h2>
+      <form method="POST" novalidate class="space-y-5">
+        {{ form.hidden_tag() }}
+        <div>
+          {{ form.email.label(class_='block text-[#333333] mb-2') }}
+          {{ form.email(class_='w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#276EF1]') }}
+        </div>
+        <div>
+          {{ form.password.label(class_='block text-[#333333] mb-2') }}
+          {{ form.password(class_='w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#276EF1]') }}
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            {{ form.remember_me(class_='h-4 w-4 text-[#276EF1]') }}
+            {{ form.remember_me.label(class_='ml-2 text-gray-700') }}
+          </div>
+          <a href="#" class="text-sm text-[#FF8800] hover:underline">¿Olvidaste tu contraseña?</a>
+        </div>
+        <button type="submit" class="w-full py-3 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-md font-semibold transition">{{ form.submit.label.text }}</button>
+      </form>
+      <p class="mt-6 text-center text-gray-700">¿No tienes cuenta? <a href="{{ url_for('auth.register') }}" class="text-[#FF8800] hover:text-[#CC7700] font-medium">Regístrate</a></p>
+    </div>
+
+    <!-- Benefits Panel -->
+ 
+    <!-- Benefits Panel -->
+    <div class="mt-12 lg:mt-0 lg:ml-12 w-full max-w-lg text-white space-y-8">
+      <h3 class="text-3xl font-bold mb-4">¿Por qué elegir IndepWork?</h3>
+      <ul class="space-y-6">
+        <li class="flex items-start">
+          <div class="flex-shrink-0">
+            <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-[#FF8800]/20 text-[#FF8800]">
+              <i class="fas fa-search text-lg"></i>
+            </span>
+          </div>
+          <div class="ml-4">
+            <h4 class="text-xl font-semibold">Profesionales verificados</h4>
+            <p class="mt-1 text-gray-200">Trabaja con expertos certificados en tu área y gana confianza.</p>
+          </div>
+        </li>
+        <li class="flex items-start">
+          <div class="flex-shrink-0">
+            <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-[#FF8800]/20 text-[#FF8800]">
+              <i class="fas fa-briefcase text-lg"></i>
+            </span>
+          </div>
+          <div class="ml-4">
+            <h4 class="text-xl font-semibold">Publicación sencilla</h4>
+            <p class="mt-1 text-gray-200">Crea y administra tu oferta de servicios en pocos clics.</p>
+          </div>
+        </li>
+        <li class="flex items-start">
+          <div class="flex-shrink-0">
+            <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-[#FF8800]/20 text-[#FF8800]">
+              <i class="fas fa-comments text-lg"></i>
+            </span>
+          </div>
+          <div class="ml-4">
+            <h4 class="text-xl font-semibold">Chat seguro</h4>
+            <p class="mt-1 text-gray-200">Comunícate directamente sin salir de la plataforma.</p>
+          </div>
+        </li>
+        <li class="flex items-start">
+          <div class="flex-shrink-0">
+            <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-[#FF8800]/20 text-[#FF8800]">
+              <i class="fas fa-thumbs-up text-lg"></i>
+            </span>
+          </div>
+          <div class="ml-4">
+            <h4 class="text-xl font-semibold">Reseñas auténticas</h4>
+            <p class="mt-1 text-gray-200">Conoce la experiencia real de otros clientes con cada profesional.</p>
+          </div>
+        </li>
+        <li class="flex items-start">
+          <div class="flex-shrink-0">
+            <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-[#FF8800]/20 text-[#FF8800]">
+              <i class="fas fa-lock text-lg"></i>
+            </span>
+          </div>
+          <div class="ml-4">
+            <h4 class="text-xl font-semibold">Pagos seguros</h4>
+            <p class="mt-1 text-gray-200">Protege tus transacciones con métodos confiables.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+      </div>
+    </div>
+    {% endblock %}
+    

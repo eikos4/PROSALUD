@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Términos y Condiciones – IndepWork{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto py-10 px-4">
+  <h2 class="text-2xl font-bold text-[#276EF1] mb-6">Términos y Condiciones</h2>
+  <div class="bg-white rounded-xl shadow p-6 text-gray-800 space-y-6">
+
+    <p>Bienvenido a IndepWork. Al acceder y utilizar nuestra plataforma, aceptas cumplir los siguientes términos y condiciones. Si no estás de acuerdo, te pedimos no utilizar nuestros servicios.</p>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">1. Objeto de la Plataforma</h3>
+    <p>IndepWork es una plataforma que conecta a profesionales independientes (“Profesionales”) con clientes (“Clientes”) que buscan contratar servicios de manera segura y transparente.</p>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">2. Registro de Usuarios</h3>
+    <ul class="list-disc pl-5">
+      <li>Para acceder a las funciones de la plataforma debes registrarte como Cliente o Profesional.</li>
+      <li>La información registrada debe ser verdadera, exacta y actualizada.</li>
+      <li>Nos reservamos el derecho de rechazar o suspender cuentas ante incumplimientos.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">3. Publicación y Contratación de Servicios</h3>
+    <ul class="list-disc pl-5">
+      <li>Los Profesionales pueden publicar servicios detallando descripción, precio, disponibilidad y condiciones.</li>
+      <li>Los Clientes pueden solicitar y contratar servicios a través de la plataforma.</li>
+      <li>Está prohibida la publicación de servicios ilegales, fraudulentos o que infrinjan derechos de terceros.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">4. Pagos y Comisiones</h3>
+    <ul class="list-disc pl-5">
+      <li>IndepWork puede retener una comisión por cada transacción realizada. El monto de la comisión será informado previamente.</li>
+      <li>Los pagos se procesan a través de métodos electrónicos seguros.</li>
+      <li>IndepWork no es responsable por acuerdos o pagos realizados fuera de la plataforma.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">5. Evaluaciones y Comentarios</h3>
+    <ul class="list-disc pl-5">
+      <li>Los Clientes pueden evaluar y comentar los servicios prestados por los Profesionales.</li>
+      <li>Los comentarios deben ser respetuosos y basados en experiencias reales.</li>
+      <li>IndepWork se reserva el derecho de eliminar comentarios ofensivos o fraudulentos.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">6. Responsabilidad de los Usuarios</h3>
+    <ul class="list-disc pl-5">
+      <li>Cada usuario es responsable por la información que publica y los servicios que ofrece o contrata.</li>
+      <li>No está permitido suplantar identidades, utilizar datos falsos o actuar de manera fraudulenta.</li>
+      <li>El incumplimiento de estos términos puede resultar en la suspensión o eliminación de la cuenta.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">7. Propiedad Intelectual</h3>
+    <p>Todos los contenidos, marcas y logotipos de IndepWork son propiedad de la empresa o de sus respectivos titulares. Está prohibido el uso no autorizado de los mismos.</p>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">8. Modificaciones</h3>
+    <p>IndepWork podrá modificar estos Términos y Condiciones en cualquier momento. Te notificaremos a través de la plataforma. El uso continuado implica la aceptación de los cambios.</p>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">9. Privacidad y Protección de Datos</h3>
+    <p>El tratamiento de datos personales se rige por nuestra <a href="" class="text-[#276EF1] underline">Política de Privacidad</a>.</p>
+
+    <h3 class="text-xl font-semibold text-[#164399] mt-6 mb-2">10. Jurisdicción</h3>
+    <p>Para cualquier controversia se aplicarán las leyes de Chile y serán competentes los tribunales de Santiago.</p>
+
+    <hr>
+    <p class="text-xs text-gray-500">Última actualización: {{ (now()|date('d-m-Y')) if now else "2025" BY LEUCODE.IA }}</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Buscar Servicios – IndepWork{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gray-100 py-12">
+  <div class="max-w-6xl mx-auto px-4">
+    <!-- Filters -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
+      <h2 class="text-3xl font-bold text-[#333333]">Resultados para “{{ query or 'Todas' }}”</h2>
+      <div class="flex flex-wrap gap-3">
+        <!-- Specialty Filter -->
+        <select id="filter-category" class="px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]">
+          <option value="">Todas las Especialidades</option>
+          {% for cat, label in [('gasfiteria','Gasfitería'),('electricista','Eléctrico'),('gastronomia','Gastronomía'),('paseo_mascotas','Paseo de Mascotas')] %}
+          <option value="{{ cat }}" {% if request.args.get('category')==cat %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <!-- Region Filter -->
+        <select id="filter-region" class="px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]">
+          <option value="">Todas las Regiones</option>
+          {% for region in regions %}
+          <option value="{{ region }}" {% if request.args.get('region')==region %}selected{% endif %}>{{ region }}</option>
+          {% endfor %}
+        </select>
+        <!-- Search Input -->
+        <input type="text" id="filter-keyword" placeholder="Palabra clave" value="{{ request.args.get('q','') }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]" />
+        <button id="apply-filters" class="px-5 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-lg font-semibold transition">Filtrar</button>
+      </div>
+    </div>
+
+    <!-- Professionals Grid -->
+    <div id="results-grid" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {% for user in results %}
+      <div class="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
+        <!-- Profile Image -->
+        <div class="h-40 bg-gray-200 rounded overflow-hidden mb-4">
+          <img src="{{ user.profile_image_url or url_for('static', filename='images/placeholder.png') }}" alt="{{ user.username }}" class="w-full h-full object-cover" />
+        </div>
+        <!-- Name and Location -->
+        <h3 class="text-xl font-semibold text-[#333333] mb-1">{{ user.username }}</h3>
+        {% if user.location %}
+        <p class="text-gray-500 text-sm mb-2 flex items-center gap-1"><i class="fas fa-map-marker-alt"></i>{{ user.location }}</p>
+        {% endif %}
+        <!-- Category Badge -->
+        <span class="inline-block px-3 py-1 bg-[#276EF1]/20 text-[#276EF1] rounded-full text-sm mb-3">{{ user.category|capitalize }}</span>
+        <!-- Description -->
+        <p class="text-gray-600 text-sm mb-4">{{ user.description[:100] if user.description else 'Descripción no disponible.' }}...</p>
+        <!-- Actions -->
+        <div class="flex gap-2">
+          <a href="{{ url_for('main.public_profile', id=user.id) }}" class="flex-1 px-4 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-md text-center text-sm">Ver Perfil</a>
+          <a href="{{ url_for('messages.chat', other_id=user.id) }}" class="flex-1 px-4 py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-md text-center text-sm">Mensaje</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('apply-filters').addEventListener('click', () => {
+    const params = new URLSearchParams(window.location.search);
+    const cat = document.getElementById('filter-category').value;
+    const region = document.getElementById('filter-region').value;
+    const key = document.getElementById('filter-keyword').value.trim();
+    if (cat) params.set('category', cat); else params.delete('category');
+    if (region) params.set('region', region); else params.delete('region');
+    if (key) params.set('q', key); else params.delete('q');
+    window.location.search = params.toString();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Inicio – IndepWork{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700">
+  <div class="text-center px-4">
+    <h1 class="text-5xl font-extrabold mb-4">Conecta con servicios independientes</h1>
+    <p class="text-lg mb-8">Profesionales de todos los rubros, en un solo lugar.</p>
+    <div class="space-x-4">
+      <a href="{{ url_for('main.search') }}"
+         class="px-6 py-3 bg-pink-600 hover:bg-pink-500 rounded-lg font-semibold transition">
+        Buscar Servicios
+      </a>
+      <a href="{{ url_for('auth.register') }}"
+         class="px-6 py-3 border-2 border-pink-600 hover:border-pink-500 rounded-lg font-semibold transition">
+        Publicar Mi Servicio
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

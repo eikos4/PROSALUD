@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Evaluaciones recibidas{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-10">
+  <h2 class="text-2xl font-bold text-[#276EF1] mb-6 flex items-center gap-2">
+    <i class="fas fa-star-half-alt"></i> Evaluaciones de clientes
+  </h2>
+  {% if evaluaciones %}
+    <div class="space-y-5">
+      {% for ev in evaluaciones %}
+      <div class="bg-white rounded-xl shadow p-6 flex flex-col md:flex-row gap-4 border border-[#276EF1]/10">
+        <!-- Avatar o icono -->
+        <div class="flex-shrink-0 flex flex-col items-center justify-center">
+          <img src="{{ ev.client.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+               alt="{{ ev.client.username }}"
+               class="w-12 h-12 rounded-full object-cover border-2 border-[#FF8800]/40 shadow mb-2">
+          <span class="text-xs text-[#276EF1] font-bold">{{ ev.client.username }}</span>
+        </div>
+        <div class="flex-1">
+          <!-- Estrellas -->
+          <div class="flex items-center gap-2 mb-2">
+            {% for i in range(1, 6) %}
+              {% if i <= ev.rating %}
+                <i class="fas fa-star text-yellow-400"></i>
+              {% else %}
+                <i class="far fa-star text-gray-300"></i>
+              {% endif %}
+            {% endfor %}
+            <span class="text-sm text-gray-500 font-semibold ml-2">{{ ev.created_at.strftime('%d-%m-%Y') }}</span>
+          </div>
+          <div class="text-gray-700 text-base italic mb-2">
+            {{ ev.comment or 'Sin comentario' }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center text-gray-400 mt-10">
+      <i class="fas fa-info-circle text-2xl mb-2"></i>
+      <p class="text-lg">Todavía no tienes evaluaciones.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Profesional{% endblock %}
+{% block content %}
+<section class="min-h-screen bg-gray-900 py-12">
+  <div class="max-w-3xl mx-auto px-4">
+    <h2 class="text-3xl font-bold text-white mb-6">Mi Perfil Profesional</h2>
+    {% if not current_user.is_active %}
+      <div class="bg-yellow-500 text-gray-900 p-4 rounded mb-6">
+        Debes pagar <strong>$5.000</strong> para activar tu perfil.
+        <a href="{{ url_for('professional.payment') }}" class="ml-4 underline">Pagar ahora</a>
+      </div>
+    {% else %}
+      <div class="bg-green-600 text-white p-4 rounded mb-6">
+        Tu perfil está activo y visible para los clientes.
+      </div>
+    {% endif %}
+    <div class="space-y-4">
+      <a href="{{ url_for('professional.profile') }}" class="block px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-white">Editar Perfil</a>
+      <a href="{{ url_for('messages.inbox') }}" class="block px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-white">Bandeja de Mensajes</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

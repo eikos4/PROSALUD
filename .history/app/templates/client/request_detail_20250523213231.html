@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Detalle de solicitud{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2>Detalle de solicitud</h2>
+  <p><strong>Profesional:</strong> {{ req.service.professional.username }}</p>
+  <p><strong>Servicio:</strong> {{ req.service.title }}</p>
+  <p><strong>Estado:</strong> {{ req.status }}</p>
+  <hr>
+  <h4>Mensajes</h4>
+  <div class="mb-3">
+    {% for msg in messages %}
+      <div class="{% if msg.sender_id == current_user.id %}text-end{% endif %}">
+        <div class="p-2 mb-2 rounded {% if msg.sender_id == current_user.id %}bg-primary text-white{% else %}bg-light{% endif %}">
+          {{ msg.body }}
+          <br>
+          <small class="text-muted">{{ msg.timestamp.strftime('%d-%m-%Y %H:%M') }}</small>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+      {{ form.body.label }}<br>
+      {{ form.body(class="form-control") }}
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+  </form>
+</div>
+{% endblock %}

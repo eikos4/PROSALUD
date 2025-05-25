@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}Mi disponibilidad{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-10">
+  <h2 class="text-3xl font-bold text-[#276EF1] mb-8 flex items-center gap-2">
+    <i class="fas fa-calendar-alt"></i> Mi Disponibilidad
+  </h2>
+  
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mb-6">
+        {% for category, msg in messages %}
+          <div class="rounded-lg p-3 mb-2 text-center 
+              {% if category == 'success' %}bg-green-100 text-green-800{% elif category == 'warning' %}bg-yellow-100 text-yellow-700{% elif category == 'danger' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- CARD DEL FORMULARIO -->
+  <div class="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-[#276EF1]/20">
+    <form method="POST" class="flex flex-col md:flex-row gap-4 items-end">
+      {{ form.hidden_tag() }}
+
+      <!-- Día de la semana -->
+      <div class="flex flex-col flex-1">
+        <label class="text-[#276EF1] font-bold mb-1">Día</label>
+        <select name="{{ form.weekday.name }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1]" required>
+          <option value="">Selecciona día</option>
+          {% for value, label in form.weekday.choices %}
+            <option value="{{ value }}" {% if form.weekday.data == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.weekday.errors %}
+          <span class="text-red-500 text-xs">{{ form.weekday.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Hora de inicio -->
+      <div class="flex flex-col flex-1">
+        <label class="text-[#276EF1] font-bold mb-1">Hora de inicio</label>
+        <input
+          type="time"
+          name="{{ form.start_time.name }}"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1]"
+          value="{{ form.start_time.data if form.start_time.data else '' }}"
+          required>
+        {% if form.start_time.errors %}
+          <span class="text-red-500 text-xs">{{ form.start_time.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Hora de término -->
+      <div class="flex flex-col flex-1">
+        <label class="text-[#276EF1] font-bold mb-1">Hora de término</label>
+        <input
+          type="time"
+          name="{{ form.end_time.name }}"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1]"
+          value="{{ form.end_time.data if form.end_time.data else '' }}"
+          required>
+        {% if form.end_time.errors %}
+          <span class="text-red-500 text-xs">{{ form.end_time.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Botón -->
+      <div class="flex flex-col flex-0">
+        <label class="invisible">Agregar</label>
+        {{ form.submit(class_="w-full px-6 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-lg font-extrabold shadow transition") }}
+      </div>
+    </form>
+  </div>
+
+  <!-- CARD DE HORARIOS AGREGADOS -->
+  <div class="bg-white rounded-2xl shadow-lg p-8 border border-[#276EF1]/20">
+    <h4 class="text-xl font-semibold text-[#276EF1] mb-4 flex items-center gap-2">
+      <i class="fas fa-clock"></i> Días y horarios
+    </h4>
+    {% if disponibles %}
+      <ul class="space-y-3">
+        {% for slot in disponibles %}
+          <li class="flex justify-between items-center py-3 px-4 bg-[#f5f7fc] rounded-xl shadow-sm border-l-4 border-[#276EF1]/60">
+            <span class="flex items-center gap-3 font-semibold text-[#1E293B] text-lg">
+              <i class="far fa-calendar-check text-[#FF8800]"></i>
+              {{ slot.weekday }}<span class="text-gray-500 mx-2">|</span>
+              <span class="bg-[#276EF1]/10 text-[#276EF1] px-2 py-0.5 rounded-lg">
+                {{ slot.start_time.strftime('%H:%M') }} – {{ slot.end_time.strftime('%H:%M') }}
+              </span>
+            </span>
+            <!-- Botón eliminar -->
+            <form action="{{ url_for('professional.delete_availability', id=slot.id) }}" method="POST" style="display:inline;">
+              {{ csrf_token() }}
+              <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center gap-2 shadow font-semibold text-base transition group">
+                <i class="fas fa-trash-alt"></i>
+                <span class="hidden sm:inline">Eliminar</span>
+              </button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="text-gray-400 text-center py-10 text-lg flex flex-col items-center">
+        <i class="fas fa-info-circle text-3xl mb-3"></i>
+        No tienes disponibilidad agregada.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

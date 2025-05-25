@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block title %}Perfil de {{ user.full_name or user.username }} – IndepWork{% endblock %}
+
+{% block content %}
+<!-- HEADER HERO PROFESIONAL -->
+<section class="relative min-h-[340px] bg-gradient-to-br from-[#276EF1]/80 via-[#e6eefa]/60 to-[#FF8800]/20 flex items-end">
+  <div class="w-full h-56 bg-cover bg-center"
+       style="background-image: url('{{ user.cover_image_url or url_for('static', filename='images/cover-placeholder.jpg') }}');">
+  </div>
+  <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 md:left-20 md:translate-x-0">
+    <img src="{{ user.profile_image_url or url_for('static', filename='images/avatar-placeholder.png') }}"
+         alt="Avatar"
+         class="w-40 h-40 rounded-full border-4 border-white shadow-2xl object-cover bg-white animate-fade-in" />
+  </div>
+</section>
+
+<!-- BLOQUE DE DATOS PRINCIPALES -->
+<div class="max-w-5xl mx-auto px-4 -mt-20 md:-mt-24 z-10 relative">
+  <div class="bg-white rounded-2xl shadow-xl py-10 px-7 md:px-16 flex flex-col md:flex-row items-center md:items-end gap-6">
+    <div class="flex-1">
+      <h1 class="text-3xl md:text-4xl font-black text-[#164399] flex items-center gap-2">
+        {{ user.full_name or user.username }}
+        {% if user.verified %}
+          <span class="inline-block text-green-500" title="Cuenta verificada"><i class="fas fa-check-circle"></i></span>
+        {% endif %}
+      </h1>
+      {% if user.title %}
+        <div class="text-lg text-gray-600 mt-2">{{ user.title }}</div>
+      {% endif %}
+      <div class="flex flex-wrap gap-3 mt-4">
+        {% if user.location %}
+          <span class="inline-flex items-center px-3 py-1 bg-[#FF8800]/10 text-[#FF8800] rounded-full"><i class="fas fa-map-marker-alt mr-1"></i>{{ user.location }}</span>
+        {% endif %}
+        {% if user.category %}
+          <span class="inline-flex items-center px-3 py-1 bg-[#276EF1]/10 text-[#276EF1] rounded-full"><i class="fas fa-briefcase mr-1"></i>{{ user.category|capitalize }}</span>
+        {% endif %}
+        {% if user.subcategory %}
+          <span class="inline-flex items-center px-3 py-1 bg-[#FBBF24]/10 text-[#FF8800] rounded-full"><i class="fas fa-star mr-1"></i>{{ user.subcategory }}</span>
+        {% endif %}
+      </div>
+      <div class="flex flex-wrap gap-2 mt-3">
+        {% if user.registration_date %}
+          <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs">Miembro desde {{ user.registration_date.strftime('%B %Y') }}</span>
+        {% endif %}
+        {% if user.last_login %}
+          <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs">Último acceso: {{ user.last_login.strftime('%d-%m-%Y') }}</span>
+        {% endif %}
+        {% if user.rating %}
+          <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs flex items-center gap-1" title="Promedio de evaluaciones">
+            <i class="fas fa-star"></i> {{ '%.1f'|format(user.rating) }} / 5.0
+          </span>
+        {% endif %}
+      </div>
+      <div class="flex flex-wrap gap-4 mt-6">
+        <a href="{{ url_for('messages.chat', other_id=user.id) }}"
+           class="px-6 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-full font-semibold shadow transition flex items-center gap-2"
+           title="Enviar mensaje directo">
+          <i class="fas fa-comment-dots"></i> Mensaje
+        </a>
+        {% if user.website %}
+        <a href="{{ user.website }}" target="_blank"
+           class="px-6 py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-full font-semibold shadow transition flex items-center gap-2"
+           title="Sitio web profesional">
+          <i class="fas fa-globe"></i> Sitio Web
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <!-- Botón “Solicitar servicio” si tiene -->
+    {% if user.services and user.role == 'professional' %}
+    <div class="md:ml-8 mt-8 md:mt-0 flex flex-col items-center md:items-end">
+      <a href="#servicios"
+         class="px-7 py-3 bg-gradient-to-r from-[#276EF1] to-[#FF8800] hover:from-[#1E5BB8] hover:to-[#CC7700] text-white rounded-full font-extrabold text-lg shadow-xl transition group animate-fade-in"
+         title="Ir a servicios y solicitar">
+        <i class="fas fa-handshake mr-2"></i> Solicitar servicio
+      </a>
+      <span class="mt-2 text-xs text-gray-400">Elige el servicio que más se adapte a ti</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Separador visual -->
+<div class="w-full flex justify-center py-2">
+  <div class="h-2 w-24 rounded-full bg-gradient-to-r from-[#276EF1]/70 to-[#FF8800]/40"></div>
+</div>
+
+<!-- SOBRE MÍ Y HABILIDADES -->
+<section class="bg-[#F5F7FA] py-10">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-2xl font-bold text-[#276EF1] mb-4"><i class="fas fa-info-circle mr-2"></i>Sobre mí</h2>
+    <p class="text-gray-700 leading-relaxed text-lg mb-4">{{ user.description or 'Sin descripción disponible.' }}</p>
+    <div class="mt-4 flex flex-wrap gap-3">
+      {% if user.skills %}
+        {% for skill in user.skills %}
+        <span class="px-4 py-2 bg-[#276EF1]/20 text-[#276EF1] rounded-full text-base font-semibold shadow">{{ skill }}</span>
+        {% endfor %}
+      {% else %}
+        <span class="text-gray-400">Este usuario aún no ha agregado habilidades.</span>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCIA / EDUCACIÓN -->
+{% if user.experience_entries %}
+<section class="bg-white py-10">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-2xl font-bold text-[#276EF1] mb-6"><i class="fas fa-graduation-cap mr-2"></i>Experiencia y educación</h2>
+    <div class="space-y-8 border-l-4 border-[#276EF1]/20 pl-6">
+      {% for entry in user.experience_entries %}
+      <div class="relative group">
+        <div class="absolute -left-7 top-1 w-4 h-4 rounded-full bg-[#276EF1] border-2 border-white group-hover:bg-[#FF8800] transition"></div>
+        <div>
+          <h3 class="text-xl font-bold text-[#164399]">{{ entry.title }}</h3>
+          <span class="text-gray-500">{{ entry.institution }} | {{ entry.period }}</span>
+          <p class="mt-2 text-gray-700">{{ entry.details }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- SERVICIOS OFRECIDOS -->
+{% if user.services and user.role == 'professional' %}
+<section id="servicios" class="bg-[#F5F7FA] py-10">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-2xl font-bold text-[#276EF1] mb-6 flex items-center gap-2"><i class="fas fa-briefcase"></i> Servicios ofrecidos</h2>
+    <div class="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
+      {% for service in user.services %}
+      <div class="bg-white p-6 rounded-2xl shadow-lg border border-[#276EF1]/10 flex flex-col gap-2 hover:shadow-xl transition group">
+        <span class="font-bold text-lg text-[#164399] mb-1 group-hover:text-[#276EF1]">{{ service.title }}</span>
+        <span class="text-gray-600 text-base mb-2">{{ service.description }}</span>
+        <span class="text-[#276EF1] font-bold mt-2">${{ '{:,.0f}'.format(service.price) }} CLP</span>
+        <a href="{{ url_for('client.request_service', service_id=service.id) }}"
+           class="mt-auto px-4 py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-lg text-sm font-bold shadow transition text-center flex items-center gap-2"
+           title="Solicitar este servicio">
+           <i class="fas fa-handshake"></i> Solicitar
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CONTACTO -->
+<section class="py-10 bg-white">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-2xl font-bold text-[#276EF1] mb-4 flex items-center gap-2"><i class="fas fa-address-book"></i> Contacto</h2>
+    <div class="flex flex-wrap gap-6 text-lg text-gray-700">
+      {% if user.email %}
+        <span><i class="fas fa-envelope mr-2"></i>{{ user.email }}</span>
+      {% endif %}
+      {% if user.phone %}
+        <span><i class="fas fa-phone mr-2"></i>{{ user.phone }}</span>
+      {% endif %}
+      {% if user.website %}
+        <span><i class="fas fa-globe mr-2"></i>
+          <a href="{{ user.website }}" class="text-[#276EF1] hover:underline" target="_blank">{{ user.website }}</a>
+        </span>
+      {% endif %}
+    </div>
+    {% if not (user.email or user.phone or user.website) %}
+      <div class="text-gray-400 mt-3">No hay información de contacto pública para este profesional.</div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  @keyframes fade-in {0%{opacity:0;transform:translateY(40px);}100%{opacity:1;transform:none;}}
+  .animate-fade-in {animation: fade-in 1.1s cubic-bezier(.6,0,.4,1) forwards;}
+</style>
+{% endblock %}

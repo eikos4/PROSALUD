@@ -1,0 +1,30 @@
+<!-- app/templates/professional/profile.html -->
+{% extends 'base.html' %}
+{% block title %}Editar Perfil{% endblock %}
+{% block content %}
+<section class="min-h-screen bg-gray-900 py-12">
+  <div class="max-w-2xl mx-auto px-4 bg-gray-800 p-6 rounded-lg">
+    <h2 class="text-2xl font-bold text-white mb-4">Editar Perfil Profesional</h2>
+    <form method="POST" class="space-y-4">
+      {{ form.hidden_tag() }}
+      <div>
+        {{ form.full_name.label(class_='block text-gray-300') }}
+        {{ form.full_name(class_='w-full mt-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:border-pink-500 text-white') }}
+      </div>
+      <div>
+        {{ form.category.label(class_='block text-gray-300') }}
+        {{ form.category(class_='w-full mt-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:border-pink-500 text-white') }}
+      </div>
+      <div>
+        {{ form.description.label(class_='block text-gray-300') }}
+        {{ form.description(class_='w-full mt-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:border-pink-500 text-white') }}
+      </div>
+      <div>
+        {{ form.experience.label(class_='block text-gray-300') }}
+        {{ form.experience(class_='w-full mt-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:border-pink-500 text-white') }}
+      </div>
+      <button type="submit" class="w-full py-2 bg-pink-600 hover:bg-pink-500 rounded text-white font-semibold">{{ form.submit.label.text }}</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

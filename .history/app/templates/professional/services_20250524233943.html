@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Mis Servicios – IndepWork{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-10">
+  <h2 class="text-2xl font-bold text-[#276EF1] mb-6 flex items-center gap-2">
+    <i class="fas fa-briefcase"></i> Mis Servicios Ofrecidos
+  </h2>
+
+  <!-- Mensajes de feedback -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mb-6">
+        {% for category, msg in messages %}
+          <div class="rounded-lg p-3 mb-2 text-center 
+              {% if category == 'success' %}bg-green-100 text-green-800{% elif category == 'warning' %}bg-yellow-100 text-yellow-700{% elif category == 'danger' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Formulario para crear servicio -->
+
+
+  <!-- Lista de servicios -->
+  <div class="bg-white rounded-xl shadow p-6 border border-[#276EF1]/10">
+    <h3 class="text-lg font-bold text-[#164399] mb-4 flex items-center gap-2">
+      <i class="fas fa-list-ul"></i> Servicios creados
+    </h3>
+    {% if services %}
+      <ul class="divide-y divide-gray-200">
+        {% for s in services %}
+        <li class="flex flex-col md:flex-row justify-between items-start md:items-center py-4 gap-4">
+          <div>
+            <span class="block font-bold text-lg text-[#164399] mb-1">{{ s.title }}</span>
+            <span class="block text-gray-600 text-sm mb-1">{{ s.description|truncate(100) }}</span>
+            <span class="inline-block px-2 py-1 bg-[#276EF1]/10 text-[#276EF1] rounded-full text-xs font-semibold mb-2">
+              ${{ "{:,.0f}".format(s.price) }} CLP
+            </span>
+          </div>
+          <div class="flex gap-2 mt-2 md:mt-0">
+            <a href="{{ url_for('professional.edit_service', service_id=s.id) }}"
+               class="px-4 py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded font-bold text-xs shadow transition flex items-center gap-1">
+              <i class="fas fa-edit"></i> Editar
+            </a>
+            <form action="{{ url_for('professional.delete_service', service_id=s.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este servicio?');">
+    
+              <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded font-bold text-xs shadow transition flex items-center gap-1">
+                <i class="fas fa-trash-alt"></i> Eliminar
+              </button>
+            </form>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="text-center text-gray-400 py-10">
+        <i class="fas fa-info-circle text-3xl mb-3"></i>
+        <p class="text-lg">No has creado servicios todavía.</p>
+      </div>
+    {% endif %}
+  </div>
+
+
+
+
+
+</div>
+{% endblock %}

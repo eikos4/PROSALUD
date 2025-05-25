@@ -1,0 +1,15 @@
+<!-- app/templates/client/dashboard.html -->
+{% extends 'base.html' %}
+{% block title %}Dashboard Cliente{% endblock %}
+{% block content %}
+<section class="min-h-screen bg-gray-900 py-12">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-3xl font-bold text-white mb-6">Dashboard Cliente</h2>
+    <form action="{{ url_for('main.search') }}" method="GET" class="mb-6 flex space-x-4">
+      <input type="text" name="q" placeholder="Buscar servicios..." class="flex-grow px-4 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:border-pink-500">
+      <button type="submit" class="px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded text-white">Buscar</button>
+    </form>
+    <!-- Podrías mostrar búsquedas recientes o categorías destacadas -->
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Dejar Reseña – IndepWork{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto py-10">
+  <h2 class="text-2xl font-bold mb-6 text-[#276EF1]">Dejar una reseña a {{ req.service.professional.username }}</h2>
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <div class="mb-2">
+      <span class="font-semibold">Servicio:</span> {{ req.service.title }}
+    </div>
+  </div>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-4">
+      {{ form.rating.label(class_="block text-gray-700 mb-1") }}
+      {{ form.rating(class_="form-control w-24", min="1", max="5") }} <span class="ml-2 text-gray-500">/5</span>
+      {% if form.rating.errors %}
+        <div class="text-red-500 text-xs mt-1">{{ form.rating.errors[0] }}</div>
+      {% endif %}
+    </div>
+    <div class="mb-4">
+      {{ form.comment.label(class_="block text-gray-700 mb-1") }}
+      {{ form.comment(class_="form-control w-full", rows="4") }}
+      {% if form.comment.errors %}
+        <div class="text-red-500 text-xs mt-1">{{ form.comment.errors[0] }}</div>
+      {% endif %}
+    </div>
+    <button type="submit" class="bg-[#276EF1] text-white px-6 py-2 rounded font-bold shadow">Enviar reseña</button>
+  </form>
+</div>
+{% endblock %}

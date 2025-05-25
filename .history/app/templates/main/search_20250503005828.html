@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Inicio – IndepWork{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gray-100 py-12">
+  <div class="max-w-6xl mx-auto px-4">
+    <!-- Filters -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 space-y-4 md:space-y-0">
+      <h2 class="text-3xl font-bold text-[#333333]">Resultados para "{{ query }}"</h2>
+      <div class="flex flex-wrap gap-4">
+        <select id="filter-category" class="px-4 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#276EF1]">
+          <option value="">Todas las Categorías</option>
+          {% for cat, label in [('gasfiteria','Gasfitería'),('electricista','Electricista'),('gastronomia','Gastronomía'),('paseo_mascotas','Paseo de Mascotas')] %}
+          <option value="{{ cat }}" {{ 'selected' if request.args.get('category')==cat else '' }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <input type="text" id="filter-location" placeholder="Ubicación" value="{{ request.args.get('location','') }}" class="px-4 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#276EF1]" />
+        <button id="apply-filters" class="px-4 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-md font-semibold transition">Filtrar</button>
+      </div>
+    </div>
+
+    <!-- Grid de profesionales -->
+    <div id="results-grid" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {% for user in results %}
+      <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+        <!-- Imagen de perfil o placeholder -->
+        <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden">
+          <img src="{{ user.profile_image_url or url_for('static', filename='images/placeholder.png') }}" alt="{{ user.username }}" class="w-full h-full object-cover" />
+        </div>
+        <h3 class="text-xl font-semibold text-[#333333] mb-2">{{ user.username }}</h3>
+        <p class="text-[#276EF1] font-medium mb-1">{{ user.category|capitalize }}</p>
+        <p class="text-gray-600 text-sm mb-4">{{ user.description[:100] if user.description else 'Sin descripción' }}...</p>
+        <div class="flex gap-2">
+          <a href="{{ url_for('main.public_profile', id=user.id) }}" class="flex-1 px-4 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-md text-center text-sm">Ver Perfil</a>
+          <a href="{{ url_for('messages.chat', other_id=user.id) }}" class="flex-1 px-4 py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-md text-center text-sm">Mensaje</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('apply-filters').addEventListener('click', () => {
+    const cat = document.getElementById('filter-category').value;
+    const loc = document.getElementById('filter-location').value.trim();
+    const params = new URLSearchParams(window.location.search);
+    if (cat) params.set('category', cat);
+    else params.delete('category');
+    if (loc) params.set('location', loc);
+    else params.delete('location');
+    window.location.search = params.toString();
+  });
+</script>
+{% endblock %}

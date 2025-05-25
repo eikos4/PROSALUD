@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Perfil de {{ professional.username }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2>{{ professional.username }}</h2>
+  <p><strong>Categoría:</strong> {{ professional.category }}</p>
+  <p>{{ professional.description }}</p>
+  <h4>Servicios ofrecidos</h4>
+  <ul class="list-group mb-3">
+    {% for service in professional.services %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          <strong>{{ service.title }}</strong><br>
+          {{ service.description|truncate(70) }}
+        </span>
+        <span>
+          ${{ service.price }} CLP
+          <a href="{{ url_for('client.request_service', service_id=service.id) }}" class="btn btn-success btn-sm ms-2">Solicitar</a>
+        </span>
+      </li>
+    {% else %}
+      <li class="list-group-item">No ha definido servicios.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

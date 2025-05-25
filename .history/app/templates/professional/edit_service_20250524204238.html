@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Editar servicio{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto py-10">
+  <div class="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-[#276EF1]/20">
+    <h2 class="text-3xl font-bold text-[#276EF1] mb-6 flex items-center gap-2">
+      <i class="fas fa-edit"></i> Editar Servicio
+    </h2>
+    <form method="POST" class="space-y-6">
+      {{ form.hidden_tag() }}
+
+      <div>
+        {{ form.title.label(class_="block text-[#164399] font-extrabold mb-1") }}
+        {{ form.title(
+          class_="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 bg-[#f7fafd] focus:outline-none focus:bg-[#e6eefa] focus:border-[#276EF1] transition",
+          placeholder="Ejemplo: Reparación de enchufes"
+        ) }}
+        {% if form.title.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.title.errors[0] }}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        {{ form.description.label(class_="block text-[#164399] font-extrabold mb-1") }}
+        {{ form.description(
+          class_="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 bg-[#f7fafd] focus:outline-none focus:bg-[#e6eefa] focus:border-[#276EF1] transition",
+          rows=4,
+          placeholder="Describe detalladamente lo que incluye este servicio"
+        ) }}
+        {% if form.description.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.description.errors[0] }}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        {{ form.price.label(class_="block text-[#164399] font-extrabold mb-1") }}
+        <div class="relative">
+          {{ form.price(
+            class_="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 bg-[#f7fafd] focus:outline-none focus:bg-[#e6eefa] focus:border-[#276EF1] transition pr-16",
+            min=0,
+            step="0.01",
+            placeholder="Ejemplo: 25000"
+          ) }}
+          <span class="absolute right-4 top-3 text-gray-400 font-bold">CLP</span>
+        </div>
+        {% if form.price.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.price.errors[0] }}</div>
+        {% endif %}
+      </div>
+
+      <div class="flex gap-3 mt-7">
+        {{ form.submit(class_="px-6 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-lg font-bold shadow transition") }}
+        <a href="{{ url_for('professional.services') }}"
+           class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-[#276EF1] rounded-lg font-bold shadow transition">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

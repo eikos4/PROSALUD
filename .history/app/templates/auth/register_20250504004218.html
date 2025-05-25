@@ -1,0 +1,39 @@
+<!-- app/templates/auth/register.html -->
+{% extends 'base.html' %}
+{% block title %}Registrarse – IndepWork{% endblock %}
+
+{% block content %}
+<div class="min-h-screen relative flex items-center justify-center bg-gray-100">
+  <!-- Overlay (optional) -->
+  <div class="absolute inset-0 bg-gradient-to-br from-[#276EF1]/20 via-white to-[#1E5BB8]/20"></div>
+
+  <div class="relative z-10 w-full max-w-md bg-white p-10 rounded-2xl shadow-2xl backdrop-blur-sm">
+    <h2 class="text-3xl font-bold text-center mb-6 text-[#333333]">Crea tu cuenta</h2>
+    <form method="POST" novalidate class="space-y-6">
+      {{ form.hidden_tag() }}
+      <div>
+        {{ form.username.label(class_='block text-[#333333] mb-2') }}
+        {{ form.username(class_='w-full px-4 py-3 bg-gray-50 text-[#000000] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]') }}
+      </div>
+      <div>
+        {{ form.email.label(class_='block text-[#333333] mb-2') }}
+        {{ form.email(class_='w-full px-4 py-3 bg-gray-50 text-[#000000] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]') }}
+      </div>
+      <div>
+        {{ form.password.label(class_='block text-[#333333] mb-2') }}
+        {{ form.password(class_='w-full px-4 py-3 bg-gray-50 text-[#000000] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]') }}
+      </div>
+      <div>
+        {{ form.password2.label(class_='block text-[#333333] mb-2') }}
+        {{ form.password2(class_='w-full px-4 py-3 bg-gray-50 text-[#000000] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]') }}
+      </div>
+      <div>
+        {{ form.role.label(class_='block text-[#333333] mb-2') }}
+        {{ form.role(class_='w-full px-4 py-3 bg-gray-50 text-[#000000] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]') }}
+      </div>
+      <button type="submit" class="w-full py-3 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-lg font-semibold transition">{{ form.submit.label.text }}</button>
+    </form>
+    <p class="mt-8 text-center text-gray-600">¿Ya tienes cuenta? <a href="{{ url_for('auth.login') }}" class="text-[#FF8800] hover:text-[#CC7700] font-medium">Inicia sesión</a></p>
+  </div>
+</div>
+{% endblock %}
