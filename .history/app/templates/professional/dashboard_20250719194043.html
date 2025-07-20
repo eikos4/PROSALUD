@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Panel Profesional – PROSALUD{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto py-12 animate-fade-in">
+  <!-- Tarjeta de Bienvenida -->
+  <div class="bg-gradient-to-br from-[#007BFF]/90 to-[#00C2FF]/80 rounded-2xl shadow-2xl px-8 py-7 mb-10 flex flex-col md:flex-row items-center gap-7 border-2 border-[#007BFF]/10">
+    <div class="flex-1">
+      <h1 class="text-2xl md:text-3xl font-extrabold text-white mb-2 flex items-center gap-2">
+        <i class="fas fa-user-md text-white"></i> ¡Bienvenido a PROSALUD<span class="text-[#D0F0FF]"> Profesional</span>!
+      </h1>
+      <p class="text-white/90 font-semibold text-lg mb-2">Accede a herramientas exclusivas para mejorar tu práctica médica:</p>
+      <ul class="list-disc list-inside text-white/80 pl-4 space-y-1 text-base">
+        <li><span class="font-bold text-blue-200">Mayor visibilidad</span> en la red de salud digital.</li>
+        <li><span class="font-bold text-blue-200">Gestión eficiente</span> de solicitudes y agenda.</li>
+        <li><span class="font-bold text-blue-200">Pagos seguros</span> y pacientes validados.</li>
+        <li><span class="font-bold text-blue-200">Reputación basada</span> en evaluaciones reales.</li>
+        <li><span class="font-bold text-blue-200">Soporte personalizado</span> para especialistas.</li>
+      </ul>
+    </div>
+    <div class="hidden md:block">
+      <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Beneficios PROSALUD" class="w-44 h-44 object-contain" />
+    </div>
+  </div>
+
+  <h2 class="text-4xl font-black mb-10 text-[#007BFF] flex items-center gap-3">
+    <i class="fas fa-user-md"></i> ¡Hola, {{ current_user.full_name or current_user.username }}!
+  </h2>
+
+  <!-- Indicadores principales -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <div class="bg-gradient-to-br from-[#d7efff] to-[#edf8ff] rounded-2xl shadow-xl p-8 flex flex-col items-center hover:scale-105 transition">
+      <div class="bg-[#00C2FF]/20 rounded-full p-4 mb-4">
+        <i class="fas fa-hand-holding-medical text-3xl text-[#00C2FF]"></i>
+      </div>
+      <div class="text-4xl font-black text-[#00C2FF]">{{ solicitudes_count }}</div>
+      <div class="text-gray-600 font-semibold mt-1">Consultas Recibidas</div>
+    </div>
+    <div class="bg-gradient-to-br from-[#f0faff] to-[#e0f0fa] rounded-2xl shadow-xl p-8 flex flex-col items-center hover:scale-105 transition">
+      <div class="bg-[#007BFF]/20 rounded-full p-4 mb-4">
+        <i class="fas fa-star text-3xl text-[#007BFF]"></i>
+      </div>
+      <div class="text-4xl font-black text-[#007BFF]">{{ avg_rating }}</div>
+      <div class="text-gray-600 font-semibold mt-1">Promedio Evaluaciones</div>
+    </div>
+    <div class="bg-gradient-to-br from-[#e0f4ff] to-[#f2faff] rounded-2xl shadow-xl p-8 flex flex-col items-center hover:scale-105 transition">
+      <div class="bg-[#0d3b66]/10 rounded-full p-4 mb-4">
+        <i class="fas fa-briefcase-medical text-3xl text-[#0d3b66]"></i>
+      </div>
+      <div class="text-4xl font-black text-[#0d3b66]">{{ current_user.services.count() }}</div>
+      <div class="text-gray-600 font-semibold mt-1">Servicios ofrecidos</div>
+    </div>
+  </div>
+
+  <!-- Accesos rápidos -->
+  <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <a href="{{ url_for('professional.requests_list') }}"
+       class="flex items-center gap-3 bg-[#007BFF] hover:bg-[#005BB5] text-white py-4 px-7 rounded-xl font-bold text-center shadow-lg transition group justify-center">
+      <i class="fas fa-notes-medical text-2xl group-hover:scale-110 transition"></i>
+      Ver solicitudes
+    </a>
+    <a href="{{ url_for('professional.services') }}"
+       class="flex items-center gap-3 bg-[#00C2FF] hover:bg-[#00A8D8] text-white py-4 px-7 rounded-xl font-bold text-center shadow-lg transition group justify-center">
+      <i class="fas fa-cogs text-2xl group-hover:scale-110 transition"></i>
+      Mis servicios
+    </a>
+    <a href="{{ url_for('professional.reviews') }}"
+       class="flex items-center gap-3 bg-[#e6f4ff] hover:bg-[#d4eafc] text-[#007BFF] py-4 px-7 rounded-xl font-bold text-center shadow-lg transition group justify-center">
+      <i class="fas fa-heartbeat text-2xl group-hover:scale-110 transition"></i>
+      Evaluaciones
+    </a>
+    <a href="{{ url_for('professional.availability') }}"
+       class="flex items-center gap-3 bg-[#0d3b66] hover:bg-[#007BFF] text-white py-4 px-7 rounded-xl font-bold text-center shadow-lg transition group justify-center">
+      <i class="fas fa-calendar-check text-2xl group-hover:scale-110 transition"></i>
+      Disponibilidad
+    </a>
+    <a href="{{ url_for('professional.profile') }}"
+       class="flex items-center gap-3 bg-white hover:bg-[#e6f5fb] text-[#007BFF] border border-[#007BFF]/30 py-4 px-7 rounded-xl font-bold text-center shadow-lg transition group justify-center">
+      <i class="fas fa-user-md text-2xl group-hover:scale-110 transition"></i>
+      Editar Perfil
+    </a>
+    <a href="{{ url_for('professional.history') }}"
+       class="flex items-center gap-3 bg-[#007BFF]/10 hover:bg-[#00C2FF]/10 text-[#00C2FF] py-4 px-7 rounded-xl font-bold text-center shadow-lg transition group justify-center">
+      <i class="fas fa-history text-2xl group-hover:scale-110 transition"></i>
+      Historial de servicios
+    </a>
+  </div>
+</div>
+
+<style>
+  @keyframes fade-in {0%{opacity:0;transform:translateY(40px);}100%{opacity:1;transform:none;}}
+  .animate-fade-in {animation: fade-in 1.1s cubic-bezier(.6,0,.4,1) forwards;}
+</style>
+{% endblock %}

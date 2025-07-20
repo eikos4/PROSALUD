@@ -1,0 +1,50 @@
+{# templates/messages/inbox.html #}
+{% extends 'base.html' %}
+{% block title %}Mensajes – IndepWork{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-12">
+  <h2 class="text-4xl font-extrabold text-[#276EF1] mb-8 flex items-center gap-2 tracking-tight">
+    <i class="fas fa-inbox"></i> Bandeja de Mensajes
+  </h2>
+ {% for convo in grouped_convos %}
+  <a href="{{ url_for('messages.chat', other_id=convo['other'].id, service_id=convo['service'].id) }}"
+     class="flex items-center px-7 py-6 hover:bg-[#F5F7FA] group gap-5 transition relative">
+    <!-- Avatar, nombre, etc -->
+    <img src="{{ convo['other'].profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+         alt="Avatar de {{ convo['other'].username }}"
+         class="h-14 w-14 rounded-full border-2 border-[#FF8800]/40 object-cover shadow-lg group-hover:scale-105 transition" />
+    <div class="flex-1 min-w-0">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-bold text-[#164399] text-lg truncate flex items-center gap-2">
+          {{ convo['other'].full_name or convo['other'].username }}
+        </span>
+        <span class="text-xs text-gray-400 whitespace-nowrap">
+          {{ convo['last_msg'].timestamp.strftime('%d-%m-%Y %H:%M') }}
+        </span>
+      </div>
+      <div class="flex items-center gap-2 text-gray-700 text-sm truncate">
+        <span class="text-[#FF8800] font-semibold">{{ convo['service'].title }}</span>
+        {% if convo['last_msg'].sender_id == current_user.id %}
+          <span class="text-gray-400 font-semibold">Tú:</span>
+        {% endif %}
+        {{ convo['last_msg'].body[:64] }}{% if convo['last_msg'].body|length > 64 %}...{% endif %}
+      </div>
+    </div>
+    <i class="fas fa-chevron-right text-[#276EF1] opacity-0 group-hover:opacity-100 transition text-lg"></i>
+  </a>
+{% endfor %}
+
+    </div>
+  {% else %}
+    <div class="bg-white rounded-2xl shadow p-12 text-center text-gray-400 mt-10">
+      <i class="fas fa-envelope-open-text text-6xl mb-4 text-[#276EF1]"></i>
+      <p class="text-2xl font-bold mb-2 text-[#164399]">¡Aún no tienes mensajes!</p>
+      <p class="text-lg text-gray-600 mb-6">Chatea con profesionales o clientes desde sus perfiles.<br>Las conversaciones aparecerán aquí.</p>
+      <a href="{{ url_for('main.search') }}" class="inline-block mt-4 px-8 py-3 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-full font-semibold shadow transition">
+        <i class="fas fa-user-friends mr-2"></i> Buscar profesionales
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

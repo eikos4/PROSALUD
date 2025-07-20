@@ -1,0 +1,23 @@
+{# templates/messages/inbox.html #}
+{% extends 'base.html' %}
+{% block title %}Mensajes – IndepWork{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-12">
+  <h2 class="text-4xl font-extrabold text-[#276EF1] mb-8 flex items-center gap-2 tracking-tight">
+    <i class="fas fa-inbox"></i> Bandeja de Mensajes
+  </h2>
+ 
+    </div>
+  {% else %}
+    <div class="bg-white rounded-2xl shadow p-12 text-center text-gray-400 mt-10">
+      <i class="fas fa-envelope-open-text text-6xl mb-4 text-[#276EF1]"></i>
+      <p class="text-2xl font-bold mb-2 text-[#164399]">¡Aún no tienes mensajes!</p>
+      <p class="text-lg text-gray-600 mb-6">Chatea con profesionales o clientes desde sus perfiles.<br>Las conversaciones aparecerán aquí.</p>
+      <a href="{{ url_for('main.search') }}" class="inline-block mt-4 px-8 py-3 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-full font-semibold shadow transition">
+        <i class="fas fa-user-friends mr-2"></i> Buscar profesionales
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

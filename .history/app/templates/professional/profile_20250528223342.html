@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gradient-to-b from-gray-900 to-[#1a2636] py-16 flex items-start">
+  <div class="max-w-4xl mx-auto px-2 md:px-4 w-full space-y-12">
+    <!-- Vista previa del perfil público -->
+    <div class="bg-white rounded-3xl shadow-2xl border border-[#276EF1]/10 p-6 animate-fade-in">
+      <h3 class="text-2xl font-bold text-gray-800 mb-4">Vista pública de tu perfil</h3>
+      <div class="flex items-center space-x-4">
+        <img src="{{ current_user.profile_image_url or url_for('static', filename='images/placeholder.png') }}" alt="{{ current_user.full_name }}" class="w-20 h-20 rounded-full object-cover shadow" />
+        <div>
+          <h4 class="text-xl font-semibold text-gray-900">{{ current_user.full_name or 'Tu Nombre' }}</h4>
+<p class="text-sm text-gray-500">@{{ current_user.username }}</p>
+          <p class="text-gray-600">{{ current_user.description or 'Describe tus servicios aquí para que tus clientes te conozcan mejor.' }}</p>
+        </div>
+      </div>
+      <a href="{{ url_for('main.public_profile', id=current_user.id) }}" target="_blank" class="mt-4 inline-block text-[#276EF1] hover:underline font-medium">Ver mi perfil público →</a>
+    </div>
+
+    <!-- Editor de perfil -->
+    <div class="bg-white rounded-3xl shadow-2xl border border-[#276EF1]/10 overflow-hidden animate-fade-in flex flex-col md:flex-row">
+      <!-- LADO IZQUIERDO: FOTO Y RESUMEN -->
+      <div class="md:w-5/12 bg-[#f6f8fc] flex flex-col items-center justify-center py-12 px-6">
+        <div class="relative group mb-4">
+          <div class="w-32 h-32 rounded-full bg-gray-200 border-4 border-[#FF8800]/40 shadow-lg overflow-hidden flex items-center justify-center">
+            <img id="avatar-preview"
+              src="{{ current_user.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+              class="object-cover w-full h-full transition group-hover:scale-105" alt="Foto de perfil actual">
+          </div>
+          <label for="profile_image" class="absolute bottom-2 right-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-full p-2 cursor-pointer shadow transition flex items-center" title="Cambiar foto de perfil">
+            <i class="fas fa-camera"></i>
+          </label>
+          {{ form.profile_image(class_="hidden", id="profile_image") }}
+        </div>
+        <h3 class="text-xl text-[#276EF1] font-extrabold mb-1 text-center">{{ current_user.full_name or 'Tu Nombre' }}</h3>
+        <span class="text-xs text-gray-400 text-center block mb-3">{{ current_user.email }}</span>
+        <p class="text-sm text-gray-600 text-center">{{ current_user.description[:80] if current_user.description else 'Describe tus servicios...' }}</p>
+      </div>
+
+      <!-- LADO DERECHO: FORMULARIO -->
+      <form method="POST" enctype="multipart/form-data" class="md:w-7/12 bg-white p-8 md:p-12 space-y-6" autocomplete="off">
+        {{ form.hidden_tag() }}
+        <h2 class="text-2xl font-extrabold text-[#164399] mb-6 flex items-center gap-2">
+          <i class="fas fa-user-edit text-[#FF8800]"></i> Información de perfil
+        </h2>
+
+        <!-- Info Personal -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            {{ form.full_name.label(class_='block text-[#164399] font-bold mb-1') }}<span class="text-pink-600">*</span>
+            {{ form.full_name(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.full_name.errors else ' border-gray-300'), placeholder='Ej: Antonia Escandon') }}
+            {% if form.full_name.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.full_name.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div>
+            {{ form.email.label(class_='block text-[#164399] font-bold mb-1') }}<span class="text-pink-600">*</span>
+            {{ form.email(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.email.errors else ' border-gray-300'), placeholder='correo@ejemplo.com') }}
+            {% if form.email.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.email.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div>
+            {{ form.phone.label(class_='block text-[#164399] font-bold mb-1') }}
+            {{ form.phone(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.phone.errors else ' border-gray-300'), placeholder='+56912345678') }}
+            {% if form.phone.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.phone.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div>
+            {{ form.website.label(class_='block text-[#164399] font-bold mb-1') }}
+            {{ form.website(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.website.errors else ' border-gray-300'), placeholder='https://linkedin.com/in/tu-perfil') }}
+            {% if form.website.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.website.errors[0] }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Info Profesional -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div>
+            {{ form.category.label(class_='block text-[#164399] font-bold mb-1') }}<span class="text-pink-600">*</span>
+            {{ form.category(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.category.errors else ' border-gray-300')) }}
+            {% if form.category.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.category.errors[0] }}</div>
+            {% endif %}
+            <small class="text-gray-400">Selecciona tu especialidad principal.</small>
+          </div>
+          <div>
+            {{ form.subcategory.label(class_='block text-[#164399] font-bold mb-1') }}
+            {{ form.subcategory(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.subcategory.errors else ' border-gray-300'), placeholder='Ej: Plomería de emergencia') }}
+            {% if form.subcategory.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.subcategory.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div class="md:col-span-2">
+            {{ form.location.label(class_='block text-[#164399] font-bold mb-1') }}
+            {{ form.location(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.location.errors else ' border-gray-300'), placeholder='Ej: Santiago, Metropolitana') }}
+            {% if form.location.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.location.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div class="md:col-span-2">
+            {{ form.description.label(class_='block text-[#164399] font-bold mb-1') }}
+            {{ form.description(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.description.errors else ' border-gray-300'), placeholder='Describe tus servicios y experiencia (máx 500 caracteres)') }}
+            {% if form.description.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.description.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div class="md:col-span-2">
+            {{ form.experience.label(class_='block text-[#164399] font-bold mb-1') }}
+            {{ form.experience(class_='w-full mt-1 px-4 py-3 bg-[#f6f8fc] border rounded-lg focus:outline-none focus:border-[#276EF1] text-gray-900 transition' ~ (' border-red-400' if form.experience.errors else ' border-gray-300'), placeholder='Ej: 3 años en instalación eléctrica, certificado SEC...') }}
+            {% if form.experience.errors %}
+              <div class="text-red-500 text-xs mt-1">{{ form.experience.errors[0] }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <hr class="my-8 border-[#276EF1]/20">
+
+        <button type="submit" class="w-full py-3 bg-[#FF8800] hover:bg-[#cc7700] rounded-lg text-white font-bold text-lg tracking-wide shadow transition flex items-center justify-center gap-2">
+          <i class="fas fa-save"></i> {{ form.submit.label.text }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+<style>
+  @keyframes fade-in {0%{opacity:0;transform:translateY(40px);}100%{opacity:1;transform:none;}}
+  .animate-fade-in {animation: fade-in 1.1s cubic-bezier(.6,0,.4,1) forwards;}
+</style>
+<script>
+  // Preview de imagen de perfil
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('profile_image');
+    const preview = document.getElementById('avatar-preview');
+    if(input && preview) {
+      input.addEventListener('change', function(e) {
+        const [file] = input.files;
+        if (file) {
+          preview.src = URL.createObjectURL(file);
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

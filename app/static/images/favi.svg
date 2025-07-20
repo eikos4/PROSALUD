@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" role="img" aria-labelledby="title">
+  <title id="title">Logo IndepWork</title>
+  <!-- Texto "Indep" en azul -->
+  <text x="0" y="40" font-family="Helvetica, Arial, sans-serif"
+        font-size="36" font-weight="bold" fill="#276EF1">
+    Indep
+  </text>
+  <!-- Texto "Work" en naranja -->
+  <text x="130" y="40" font-family="Helvetica, Arial, sans-serif"
+        font-size="36" font-weight="bold" fill="#FF8800">
+    Work
+  </text>
+  <!-- Icono: dos rectángulos cruzados como símbolo de conexión -->
+  <rect x="90" y="10" width="10" height="40" rx="2" fill="#276EF1"/>
+  <rect x="100" y="10" width="10" height="40" rx="2" fill="#FF8800" transform="rotate(90 105 30)"/>
+</svg>

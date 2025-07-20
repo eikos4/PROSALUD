@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Explorar Profesionales – IndepWork{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10 px-2 sm:px-4">
+  <h2 class="text-3xl font-extrabold text-[#276EF1] mb-8 text-center md:text-left">Explorar Profesionales</h2>
+
+  <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    {% for prof in professionals %}
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all border border-[#276EF1]/10 flex flex-col items-center p-7 group relative min-h-[370px]">
+        <!-- Avatar -->
+        <div class="w-24 h-24 rounded-full border-4 border-[#FF8800]/40 shadow mb-3 overflow-hidden flex items-center justify-center bg-gray-100">
+          <img src="{{ prof.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+               class="object-cover w-full h-full group-hover:scale-110 transition"
+               alt="{{ prof.full_name or prof.username or 'Profesional' }}">
+        </div>
+        <!-- Nombre y Categoría -->
+        <h3 class="text-xl font-black text-[#164399] mb-1 truncate w-full text-center" title="{{ prof.full_name or prof.username }}">
+          {{ prof.full_name or prof.username or 'Sin nombre' }}
+        </h3>
+        <span class="inline-block px-3 py-1 mb-2 bg-[#276EF1]/10 text-[#276EF1] rounded-full text-xs font-bold">
+          {{ prof.category|capitalize if prof.category else 'Sin categoría' }}
+        </span>
+        <!-- Descripción -->
+        <p class="text-gray-600 text-sm text-center min-h-[36px] mb-4">
+          {{ prof.description[:80] if prof.description else 'Sin descripción' }}
+          {% if prof.description and prof.description|length > 80 %}...{% endif %}
+        </p>
+        <!-- Acciones -->
+        <div class="w-full flex flex-col gap-2 mt-auto">
+          <a href="{{ url_for('main.public_profile', id=prof.id) }}"
+             class="w-full py-2 bg-[#276EF1] hover:bg-[#164399] text-white rounded-lg font-semibold shadow transition group-hover:scale-105 text-center"
+             title="Ver perfil completo de {{ prof.full_name or prof.username }}">
+            <i class="fas fa-user"></i> Ver Perfil
+          </a>
+          {% if prof.services.count() > 0 %}
+          <a href="{{ url_for('client.request_service', service_id=prof.services.first().id) }}"
+             class="w-full py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold shadow transition group-hover:scale-105 text-center"
+             title="Solicitar el primer servicio disponible">
+            <i class="fas fa-handshake"></i> Solicitar Servicio
+          </a>
+          <!-- Ejemplo de botón de chat (requiere service_id) -->
+          <a href="{{ url_for('messages.chat', other_id=prof.id, service_id=prof.services.first().id) }}"
+             class="w-full py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-lg font-semibold shadow transition group-hover:scale-105 text-center"
+             title="Chatear sobre {{ prof.services.first().title }}">
+            <i class="fas fa-comment-dots"></i> Chatear
+          </a>
+          {% endif %}
+        </div>
+        <!-- Badge de verificado opcional -->
+        {% if prof.verified %}
+        <span class="absolute top-3 right-3 bg-green-200 text-green-900 px-3 py-1 rounded-full text-xs font-bold shadow">
+          <i class="fas fa-check-circle"></i> Verificado
+        </span>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="col-span-full text-center py-10">
+        <i class="fas fa-user-slash text-4xl text-gray-400 mb-3"></i>
+        <p class="text-gray-500 text-lg">No hay profesionales aún.<br>¡Sé el primero en registrarte!</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
