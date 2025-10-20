@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Política de Privacidad – PROSALUD{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gradient-to-b from-[#f8fbff] to-[#eef6ff] py-12">
+  <div class="max-w-5xl mx-auto px-6 space-y-10">
+
+    <!-- Intro con Sanibot -->
+    <div class="flex flex-col md:flex-row items-center gap-6 bg-white p-8 rounded-2xl shadow-lg border border-indigo-100">
+      <img src="{{ url_for('static', filename='images/sanibot.png') }}" alt="Sanibot"
+           class="w-24 h-24 rounded-full shadow" />
+      <div>
+        <h1 class="text-3xl font-bold text-indigo-700">Hola, soy Sanibot 🤖</h1>
+        <p class="text-gray-600 mt-3 leading-relaxed">
+          Estoy aquí para explicarte de forma clara cómo cuidamos tu información en <strong>PROSALUD</strong>.
+          Sé que leer políticas legales puede ser aburrido, pero mi misión es que entiendas lo esencial:
+          <br><br>
+          <span class="text-indigo-600 font-semibold">👉 Tus datos son tuyos, los cuidamos y nunca los venderemos.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Explicación amigable -->
+    <div class="bg-indigo-50 p-8 rounded-xl shadow-inner">
+      <h2 class="text-2xl font-semibold text-indigo-800 mb-4">📌 Lo más importante para ti</h2>
+      <ul class="list-disc list-inside space-y-3 text-gray-700">
+        <li><strong>Uso limitado:</strong> tus datos se usan solo para prestarte servicios médicos y mejorar la plataforma.</li>
+        <li><strong>No compartimos:</strong> jamás vendemos tus datos a terceros. Solo los usamos con tu consentimiento o por obligación legal.</li>
+        <li><strong>Seguridad:</strong> almacenamos tu información en servidores protegidos y aplicamos cifrado para resguardar tu privacidad.</li>
+        <li><strong>Tus derechos:</strong> puedes pedir ver, corregir o eliminar tu información en cualquier momento.</li>
+        <li><strong>Transparencia:</strong> siempre serás informado si hay cambios importantes en esta política.</li>
+      </ul>
+    </div>
+
+    <!-- Texto legal completo -->
+    <div class="bg-white p-10 rounded-2xl shadow border border-gray-200">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Política de Privacidad (versión legal)</h2>
+
+      <p class="mb-4 text-gray-700">
+        La presente Política de Privacidad regula el tratamiento de los datos personales de los Usuarios
+        de la plataforma <strong>PROSALUD</strong>, de propiedad de Leucode SpA, en conformidad con la
+        Ley N°19.628 sobre Protección de la Vida Privada y demás normativa aplicable en Chile.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">1. Responsable del tratamiento</h3>
+      <p class="mb-4 text-gray-700">
+        El responsable del tratamiento de los datos personales es Leucode SpA, con domicilio en Santiago de Chile.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">2. Finalidad del tratamiento</h3>
+      <p class="mb-4 text-gray-700">
+        Los datos personales proporcionados por los Usuarios serán tratados con las siguientes finalidades:
+        (i) gestión de registros y cuentas de usuario, (ii) contacto entre pacientes y profesionales de la salud,
+        (iii) gestión de solicitudes, reservas y pagos, (iv) envío de notificaciones y comunicaciones relacionadas
+        con la prestación de servicios, y (v) mejora continua de la Plataforma.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">3. Conservación de los datos</h3>
+      <p class="mb-4 text-gray-700">
+        Los datos personales serán conservados mientras el Usuario mantenga una cuenta activa en la Plataforma
+        o hasta que solicite su eliminación, salvo cuando la ley requiera un período mayor de conservación.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">4. Comunicación de datos</h3>
+      <p class="mb-4 text-gray-700">
+        PROSALUD no comunicará ni transferirá datos personales a terceros sin autorización previa del Usuario,
+        salvo en los casos en que la ley lo permita o exija.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">5. Derechos de los Usuarios</h3>
+      <p class="mb-4 text-gray-700">
+        Los Usuarios podrán ejercer sus derechos de acceso, rectificación, cancelación y oposición (ARCO),
+        enviando una solicitud al correo electrónico <strong>soporte@prosalud.cl</strong>.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">6. Medidas de seguridad</h3>
+      <p class="mb-4 text-gray-700">
+        PROSALUD ha implementado medidas técnicas y organizativas razonables para proteger los datos personales
+        contra pérdida, acceso no autorizado, alteración o divulgación indebida.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">7. Cambios a esta Política</h3>
+      <p class="mb-4 text-gray-700">
+        PROSALUD se reserva el derecho de modificar la presente Política de Privacidad. Los cambios serán informados
+        a los Usuarios a través de la Plataforma y entrarán en vigencia desde su publicación.
+      </p>
+
+      <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">8. Jurisdicción y ley aplicable</h3>
+      <p class="mb-4 text-gray-700">
+        Esta Política se rige por las leyes de la República de Chile y cualquier controversia será sometida
+        a los tribunales ordinarios de justicia de Santiago.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

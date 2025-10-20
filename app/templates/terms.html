@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Términos y Condiciones – PROSALUD{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gradient-to-b from-[#f7fbff] to-[#e9f1fa] py-12">
+  <div class="max-w-4xl mx-auto px-6">
+
+    <!-- Encabezado con Sanibot -->
+    <div class="flex items-center gap-4 mb-10 bg-white p-6 rounded-2xl shadow border border-indigo-100">
+      <img src="{{ url_for('static', filename='images/sanibot.png') }}" alt="Sanibot"
+           class="w-20 h-20 rounded-full shadow" />
+      <div>
+        <h1 class="text-3xl font-bold text-indigo-700">Hola, soy Sanibot 🤖</h1>
+        <p class="text-gray-600 mt-2">
+          Estoy aquí para guiarte a través de nuestros <strong>Términos y Condiciones</strong> y la 
+          <strong>Política de Privacidad</strong> de PROSALUD.  
+          Te explicaré en palabras simples, pero también encontrarás el texto legal completo más abajo.
+        </p>
+      </div>
+    </div>
+
+    <!-- Resumen amigable -->
+    <div class="bg-indigo-50 p-6 rounded-xl shadow-inner mb-10">
+      <h2 class="text-xl font-semibold text-indigo-800 mb-4">📌 En resumen</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2">
+        <li>Al registrarte, aceptas que usaremos tus datos solo para fines médicos y de servicio.</li>
+        <li>No compartiremos tu información con terceros sin tu consentimiento, salvo obligación legal.</li>
+        <li>Los profesionales en PROSALUD deben entregar servicios de forma responsable y ética.</li>
+        <li>Puedes pedir la eliminación de tus datos cuando quieras, escribiéndonos a soporte@prosalud.cl.</li>
+      </ul>
+    </div>
+
+    <!-- Texto legal completo -->
+    <div class="bg-white p-8 rounded-2xl shadow border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Términos y Condiciones</h2>
+      <p class="mb-4 text-gray-700">
+        Estos Términos y Condiciones regulan el acceso y uso de la plataforma PROSALUD (en adelante “la Plataforma”), 
+        de propiedad de Leucode SpA, por parte de los Usuarios (pacientes, profesionales y administradores).
+      </p>
+
+      <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">1. Aceptación de los términos</h3>
+      <p class="mb-4 text-gray-700">
+        Al registrarse en la Plataforma, el Usuario acepta íntegramente los presentes Términos y Condiciones, así 
+        como la Política de Privacidad, los cuales son obligatorios y vinculantes. Si el Usuario no está de acuerdo, 
+        deberá abstenerse de utilizar la Plataforma.
+      </p>
+
+      <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">2. Registro y veracidad de los datos</h3>
+      <p class="mb-4 text-gray-700">
+        El Usuario se compromete a entregar información veraz, actualizada y completa en el proceso de registro. 
+        PROSALUD no se responsabiliza por datos falsos, incompletos o incorrectos entregados por los Usuarios.
+      </p>
+
+      <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">3. Obligaciones de los profesionales</h3>
+      <p class="mb-4 text-gray-700">
+        Los profesionales registrados deben contar con la formación y acreditaciones necesarias. Se comprometen a 
+        entregar un servicio responsable, ético y conforme a la normativa sanitaria vigente en Chile. 
+        PROSALUD podrá suspender o dar de baja a profesionales que incumplan estas obligaciones.
+      </p>
+
+      <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">4. Responsabilidad de PROSALUD</h3>
+      <p class="mb-4 text-gray-700">
+        PROSALUD actúa como intermediario tecnológico entre pacientes y profesionales, y no se responsabiliza por 
+        diagnósticos, tratamientos o resultados de los servicios contratados. 
+        La responsabilidad médica corresponde exclusivamente al profesional que presta el servicio.
+      </p>
+
+      <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">5. Política de Privacidad</h3>
+      <p class="mb-4 text-gray-700">
+        PROSALUD tratará los datos personales de los Usuarios conforme a la Ley Nº 19.628 sobre Protección de la 
+        Vida Privada de Chile y normativa aplicable. El Usuario otorga su consentimiento expreso para que PROSALUD 
+        recopile, procese y almacene sus datos, exclusivamente con fines relacionados con la prestación de los 
+        servicios ofrecidos en la Plataforma.
+      </p>
+
+      <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">6. Derechos de los Usuarios</h3>
+      <p class="mb-4 text-gray-700">
+        Los Usuarios podrán ejercer los derechos de acceso, rectificación, cancelación y oposición (ARCO) respecto 
+        de sus datos personales, enviando una solicitud a soporte@prosalud.cl.
+      </p>
+
+      <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">7. Jurisdicción y ley aplicable</h3>
+      <p class="mb-4 text-gray-700">
+        Estos Términos y Condiciones se regirán por las leyes de la República de Chile. 
+        Cualquier conflicto será sometido a los tribunales ordinarios de justicia de Santiago.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

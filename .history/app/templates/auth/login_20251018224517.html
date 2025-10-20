@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Iniciar Sesión – PRO SALUD{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-500">
+  
+  <div class="flex flex-col md:flex-row w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl backdrop-blur-lg bg-white/80 dark:bg-slate-800/70 border border-white/20">
+    
+    <!-- Panel ilustrativo -->
+    <div class="hidden md:block md:w-1/2 relative">
+      <div class="absolute inset-0 bg-blue-600/30 backdrop-blur-sm"></div>
+      <img src="{{ url_for('static', filename='images/sanibot.png') }}" 
+           alt="Ilustración salud" 
+           class="h-full w-full object-cover">
+    </div>
+
+    <!-- Formulario -->
+    <div class="w-full md:w-1/2 p-10 md:p-12 flex flex-col justify-center">
+      <div class="text-center mb-10 animate-fade-in">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo IndepWork Pro" class="mx-auto h-16 mb-4">
+        <h2 class="text-3xl font-extrabold text-gray-800 dark:text-white">Bienvenido de nuevo</h2>
+        <p class="text-gray-500 dark:text-gray-400">Accede a tu cuenta para continuar</p>
+      </div>
+
+      <!-- Mensajes Flash -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-3 mb-6 animate-fade-in">
+          {% for category, msg in messages %}
+            <div class="p-3 rounded-lg text-center font-medium transition
+                        {% if category=='success'%} bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300
+                        {% elif category=='danger'%} bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300
+                        {% else %} bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 {% endif %}">
+              {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% endwith %}
+
+      <form method="POST" novalidate id="loginForm" class="space-y-6 animate-slide-up" autocomplete="on">
+        {{ form.hidden_tag() }}
+
+        <!-- Email -->
+        <div>
+          {{ form.email.label(class_='block text-gray-700 dark:text-gray-300 mb-2 font-semibold') }}
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 dark:text-gray-500">
+              <i class="fas fa-envelope"></i>
+            </span>
+            {{ form.email(class_='w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition',
+                          placeholder='Correo electrónico',
+                          autocomplete='email') }}
+          </div>
+          {% if form.email.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.email.errors[0] }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          {{ form.password.label(class_='block text-gray-700 dark:text-gray-300 mb-2 font-semibold') }}
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 dark:text-gray-500">
+              <i class="fas fa-lock"></i>
+            </span>
+            {{ form.password(class_='w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition',
+                             placeholder='Contraseña',
+                             autocomplete='current-password') }}
+          </div>
+          {% if form.password.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.password.errors[0] }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Recordarme / Olvido -->
+        <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+          <label class="flex items-center">
+            {{ form.remember_me(class_='h-4 w-4 mr-2 accent-blue-600 dark:accent-blue-500') }} Recuérdame
+          </label>
+          <a href="#" class="hover:underline text-blue-600 dark:text-blue-400 font-medium">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Botón -->
+        <button type="submit" 
+                class="w-full py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+          Iniciar Sesión
+        </button>
+      </form>
+
+      <p class="mt-8 text-center text-gray-600 dark:text-gray-400">
+        ¿No tienes cuenta?
+        <a href="{{ url_for('auth.register') }}" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline">Regístrate</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Animaciones Tailwind personalizadas -->
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.8s ease-out; }
+.animate-slide-up { animation: slide-up 0.7s ease-out; }
+</style>
+{% endblock %}

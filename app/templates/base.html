@@ -51,7 +51,12 @@
       <div class="hidden md:flex items-center gap-3">
         {% if current_user.is_authenticated %}
           <span class="text-sm text-gray-600 flex items-center gap-2">
-            <i class="fas fa-user-circle text-[#276EF1] text-lg"></i>
+            <img
+              src="{{ url_for('professional.uploaded_file', filename=current_user.profile_image) if current_user.profile_image else url_for('static', filename='images/placeholder.png') }}"
+              alt="Foto de perfil"
+              class="h-6 w-6 rounded-full object-cover border border-gray-300"
+            >
+          </span>
             {{ current_user.username }}
             <span class="ml-1 px-2 py-0.5 bg-[#00C2FF]/20 rounded-full text-xs font-semibold">{{ current_user.role|capitalize }}</span>
           </span>

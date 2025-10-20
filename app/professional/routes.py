@@ -18,11 +18,15 @@ def dashboard():
 
 
 # === LISTAR Y CREAR SERVICIOS ===
+from app.forms import DeleteForm
+
 @professional.route('/services', methods=['GET', 'POST'])
 @login_required
 def services():
     services = Service.query.filter_by(professional_id=current_user.id).all()
     form = ServiceForm()
+    delete_form = DeleteForm()
+
     if form.validate_on_submit():
         new_service = Service(
             title=form.title.data,
@@ -34,7 +38,9 @@ def services():
         db.session.commit()
         flash('Servicio creado exitosamente.', 'success')
         return redirect(url_for('professional.services'))
-    return render_template('professional/services.html', services=services, form=form)
+
+    return render_template('professional/services.html', services=services, form=form, delete_form=delete_form)
+
 
 # === EDITAR SERVICIO ===
 # app/routes/professional.py
@@ -59,7 +65,7 @@ def edit_service(service_id):
 
 
 
-# === ELIMINAR SERVICIO ===
+"""# === ELIMINAR SERVICIO ===
 @professional.route('/services/<int:service_id>/delete', methods=['POST'])
 @login_required
 def delete_service(service_id):
@@ -69,9 +75,33 @@ def delete_service(service_id):
     db.session.delete(service)
     db.session.commit()
     flash('Servicio eliminado exitosamente.', 'success')
+    return redirect(url_for('professional.services'))"""
+
+# === ELIMINAR SERVICIO === FM.
+
+@professional.route('/services/<int:service_id>/delete', methods=['POST'])
+@login_required
+def delete_service(service_id):
+    delete_form = DeleteForm()
+    if delete_form.validate_on_submit():
+        service = Service.query.get_or_404(service_id)
+        if service.professional_id != current_user.id:
+            abort(403)
+        db.session.delete(service)
+        db.session.commit()
+        flash('Servicio eliminado exitosamente.', 'success')
+    else:
+        flash('Error en la eliminación. Intenta de nuevo.', 'danger')
     return redirect(url_for('professional.services'))
 
-# === PERFIL PROFESIONAL ===
+
+
+# === PERFIL DEL PROFESIONAL ===
+import os
+import uuid
+from werkzeug.utils import secure_filename
+from flask import current_app
+
 @professional.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -81,10 +111,34 @@ def profile():
         current_user.category    = form.category.data
         current_user.description = form.description.data
         current_user.experience  = form.experience.data
+
+        # Guardar imagen si hay archivo
+        if form.profile_image.data:
+            file = form.profile_image.data
+            filename = secure_filename(file.filename)
+            unique_filename = f"{uuid.uuid4().hex}_{filename}"
+            upload_folder = os.path.join(current_app.root_path, 'uploads')
+            os.makedirs(upload_folder, exist_ok=True)
+            file_path = os.path.join(upload_folder, unique_filename)
+            file.save(file_path)
+
+            # Actualizar el campo de imagen en la DB
+            current_user.profile_image = unique_filename
+
         db.session.commit()
         flash('Perfil actualizado.', 'success')
         return redirect(url_for('professional.dashboard'))
+
     return render_template('professional/profile.html', form=form)
+
+# === SUBIR ARCHIVOS ===
+from flask import send_from_directory, current_app
+
+@professional.route('/uploads/<filename>')
+def uploaded_file(filename):
+    uploads_dir = os.path.join(current_app.root_path, 'uploads')
+    return send_from_directory(uploads_dir, filename)
+
 
 # === ACTIVAR PERFIL / PAGO ===
 @professional.route('/payment', methods=['GET', 'POST'])
@@ -153,7 +207,7 @@ def reviews():
     evaluaciones = Evaluation.query.filter_by(professional_id=current_user.id).all()
     return render_template('professional/reviews.html', evaluaciones=evaluaciones)
 
-# === 5. CONFIGURAR DISPONIBILIDAD ===
+"""# === 5. CONFIGURAR DISPONIBILIDAD ===
 @professional.route('/availability', methods=['GET', 'POST'])
 @login_required
 def availability():
@@ -170,7 +224,34 @@ def availability():
         flash('Disponibilidad agregada.', 'success')
         return redirect(url_for('professional.availability'))
     disponibles = Availability.query.filter_by(professional_id=current_user.id).all()
-    return render_template('professional/availability.html', form=form, disponibles=disponibles)
+    return render_template('professional/availability.html', form=form, disponibles=disponibles)"""
+
+from app.forms import DeleteForm  # 👈 Importa el formulario de eliminación
+
+# === 5. CONFIGURAR DISPONIBILIDAD ===
+@professional.route('/availability', methods=['GET', 'POST'])
+@login_required
+def availability():
+    form = AvailabilityForm()
+    delete_form = DeleteForm()  # 👈 Agregado para CSRF en el formulario de eliminar
+
+    if form.validate_on_submit():
+        nueva = Availability(
+            professional_id=current_user.id,
+            weekday=form.weekday.data,
+            start_time=form.start_time.data,
+            end_time=form.end_time.data
+        )
+        db.session.add(nueva)
+        db.session.commit()
+        flash('Disponibilidad agregada.', 'success')
+        return redirect(url_for('professional.availability'))
+
+    disponibles = Availability.query.filter_by(professional_id=current_user.id).all()
+
+    # 👇 Pasamos también el delete_form al render_template
+    return render_template('professional/availability.html', form=form, disponibles=disponibles, delete_form=delete_form)
+
 
 # === ELIMINAR DISPONIBILIDAD ===
 @professional.route('/availability/delete/<int:id>', methods=['POST'])

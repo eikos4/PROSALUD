@@ -1,0 +1,395 @@
+{% extends 'base.html' %}
+{% block title %}Registrarse – IndepSalud{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E8F4FF] via-[#F0FBFF] to-[#DDF5FF] py-10 relative overflow-hidden">
+  <!-- Fondos decorativos -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[50vw] h-[50vw] bg-[#00C2FF]/10 rounded-full blur-2xl z-0"></div>
+  <div class="absolute bottom-0 right-0 w-[30vw] h-[30vw] bg-[#007BFF]/10 rounded-full blur-2xl z-0"></div>
+
+  <div class="w-full max-w-2xl mx-auto relative z-10">
+
+    <!-- HERO SaniBot -->
+    <section class="bg-gradient-to-r from-[#007BFF] to-[#00C2FF] rounded-2xl p-6 text-white shadow-xl mb-6 flex items-start gap-4">
+      <img src="{{ url_for('static', filename='images/sanibot.png') }}" alt="" class="w-16 h-16 drop-shadow-xl hidden sm:block">
+      <div class="flex-1">
+        <h2 class="text-2xl font-extrabold">Crea tu cuenta en IndepSalud</h2>
+        <p class="text-white/90">SaniBot te ayudará a terminar en menos de 2 minutos. Elige tu tipo de cuenta y completa los datos.</p>
+        <div class="mt-3 flex flex-wrap gap-2 text-xs">
+          <span class="px-2 py-1 rounded-full bg-white/10 border border-white/20">Perfiles verificados</span>
+          <span class="px-2 py-1 rounded-full bg-white/10 border border-white/20">Datos cifrados</span>
+          <span class="px-2 py-1 rounded-full bg-white/10 border border-white/20">Pagos protegidos</span>
+        </div>
+      </div>
+      <button type="button" id="sanibotQuick" class="px-4 py-2 bg-white text-[#007BFF] font-bold rounded-xl shadow hover:shadow-md">
+        Ayuda rápida
+      </button>
+    </section>
+
+    <!-- Título -->
+    <div class="mb-6 text-center">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-[#0d3b66] mb-2">Únete a IndepSalud</h1>
+      <p class="text-[#4C5B6B] text-lg">
+        ¿Cómo deseas usar la plataforma? <br>
+        <span class="text-[#007BFF] font-semibold">Solicitar atención médica</span> o
+        <span class="text-[#00C2FF] font-semibold">Ofrecer servicios de salud</span>
+      </p>
+    </div>
+
+    <!-- Tipo de cuenta -->
+    <div class="mb-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Paciente -->
+      <div id="select-cliente" tabindex="0"
+           class="cursor-pointer group bg-white/80 hover:bg-[#E6F2FF] border-2 border-transparent hover:border-[#007BFF] rounded-2xl p-7 shadow-xl transition
+                  flex flex-col items-center ring-0 focus:outline-none select-none relative"
+           onclick="selectRole('client')" onkeydown="if(event.key==='Enter'){selectRole('client')}"
+           >
+        <div class="w-16 h-16 flex items-center justify-center rounded-full bg-[#007BFF]/20 mb-3 shadow group-hover:scale-105 transition-transform">
+          <i class="fas fa-user-injured text-[#007BFF] text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-[#007BFF] mb-1">Soy Paciente</h3>
+        <p class="text-[#0d3b66] text-base mb-2 italic">Busca atención profesional cuando lo necesites</p>
+        <ul class="text-gray-600 text-sm mb-2 space-y-1">
+          <li>✓ Accede a médicos y especialistas</li>
+          <li>✓ Agenda fácilmente desde tu casa</li>
+          <li>✓ Comunicación segura y directa</li>
+        </ul>
+        <span class="absolute top-3 right-5 hidden group-[.selected]:inline-block bg-[#007BFF] text-white text-xs font-semibold px-2 py-0.5 rounded">Seleccionado</span>
+      </div>
+
+      <!-- Profesional -->
+      <div id="select-profesional" tabindex="0"
+           class="cursor-pointer group bg-white/80 hover:bg-[#DFF9FD] border-2 border-transparent hover:border-[#00C2FF] rounded-2xl p-7 shadow-xl transition
+                  flex flex-col items-center ring-0 focus:outline-none select-none relative"
+           onclick="selectRole('professional')" onkeydown="if(event.key==='Enter'){selectRole('professional')}"
+           >
+        <div class="w-16 h-16 flex items-center justify-center rounded-full bg-[#00C2FF]/20 mb-3 shadow group-hover:scale-105 transition-transform">
+          <i class="fas fa-user-md text-[#00C2FF] text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-[#00C2FF] mb-1">Soy Profesional</h3>
+        <p class="text-[#0d3b66] text-base mb-2 italic">Conecta con pacientes y crece como especialista</p>
+        <ul class="text-gray-600 text-sm mb-2 space-y-1">
+          <li>✓ Publica tu perfil y especialidad</li>
+          <li>✓ Atiende consultas online o presenciales</li>
+          <li>✓ Sistema confiable de pagos y reputación</li>
+        </ul>
+        <span class="absolute top-3 right-5 hidden group-[.selected]:inline-block bg-[#00C2FF] text-white text-xs font-semibold px-2 py-0.5 rounded">Seleccionado</span>
+      </div>
+    </div>
+
+    <div class="mb-7 text-center text-xs text-gray-500">
+      Puedes cambiar esta elección más adelante si lo necesitas. 😊
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="relative bg-white/95 p-10 rounded-2xl shadow-2xl backdrop-blur-lg border border-[#F3F4F6]">
+      <h2 class="text-2xl font-bold text-center mb-5 text-[#0d3b66]">Crea tu cuenta gratis</h2>
+
+      <!-- FLASH opcional si los usas -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="space-y-2 mb-4">
+            {% for category, msg in messages %}
+              <div class="p-3 rounded-lg text-center text-sm font-semibold
+                {% if category=='success'%} bg-green-50 text-green-700 border border-green-200
+                {% elif category=='danger'%} bg-red-50 text-red-700 border border-red-200
+                {% else %} bg-blue-50 text-blue-700 border border-blue-200 {% endif %}">
+                {{ msg }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" novalidate class="space-y-5" id="register-form" autocomplete="on">
+        {{ form.hidden_tag() }}
+
+        <!-- Honeypot anti‑spam -->
+        <div class="hidden">
+          <label>Deja este campo vacío</label>
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div>
+          {{ form.username.label(class_='block text-[#0d3b66] mb-2 font-semibold') }}
+          {{ form.username(class_='w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#0d3b66] focus:ring-2 focus:ring-[#00C2FF]', id='username') }}
+        </div>
+
+        <div>
+          {{ form.email.label(class_='block text-[#0d3b66] mb-2 font-semibold') }}
+          {{ form.email(class_='w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#0d3b66] focus:ring-2 focus:ring-[#00C2FF]', id='email') }}
+        </div>
+
+        <!-- Password + helpers -->
+        <div>
+          {{ form.password.label(class_='block text-[#0d3b66] mb-2 font-semibold') }}
+          <div class="relative">
+            {{ form.password(class_='w-full pl-4 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#0d3b66] focus:ring-2 focus:ring-[#00C2FF]', id='password') }}
+            <button type="button" id="togglePass" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+              <i class="far fa-eye"></i>
+            </button>
+          </div>
+          <div class="mt-2 flex items-center justify-between">
+            <small id="capsWarning" class="hidden text-amber-600">Bloq Mayús activado</small>
+            <small id="strengthText" class="text-gray-500">Fortaleza: —</small>
+          </div>
+          <div class="h-2 w-full bg-gray-100 rounded mt-1 overflow-hidden">
+            <div id="strengthBar" class="h-2 w-0 bg-red-400 transition-all"></div>
+          </div>
+        </div>
+
+        <div>
+          {{ form.password2.label(class_='block text-[#0d3b66] mb-2 font-semibold') }}
+          <div class="relative">
+            {{ form.password2(class_='w-full pl-4 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#0d3b66] focus:ring-2 focus:ring-[#00C2FF]', id='password2') }}
+            <button type="button" id="togglePass2" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+              <i class="far fa-eye"></i>
+            </button>
+          </div>
+          <small id="matchInfo" class="text-gray-500">Repite la contraseña.</small>
+        </div>
+
+        <!-- Campo role oculto (WTForms) -->
+        <div class="hidden">
+          {{ form.role.label }}
+          {{ form.role }}
+        </div>
+
+        <!-- Consentimiento -->
+        <!-- Consentimiento -->
+<div class="flex items-start gap-2 bg-[#f8fbff] border border-[#e6f4ff] rounded-lg p-3">
+  <input id="consent" type="checkbox" class="mt-1 h-4 w-4 accent-[#007BFF]">
+  <label for="consent" class="text-sm text-gray-700">
+    Acepto los 
+    <button type="button" id="openTermsLink" class="text-[#007BFF] underline">Términos</button> y la
+    <button type="button" id="openPrivacyLink" class="text-[#007BFF] underline">Política de Privacidad</button>.
+  </label>
+</div>
+
+
+        <button type="submit" id="submitBtn"
+          class="w-full py-3 mt-2 bg-[#007BFF] hover:bg-[#005BB5] text-white rounded-lg font-semibold shadow transition text-lg hover:scale-[1.03] focus:scale-[.98] duration-100 disabled:opacity-60 disabled:cursor-not-allowed">
+          Crear mi cuenta
+        </button>
+      </form>
+
+      <p class="mt-8 text-center text-gray-600">
+        ¿Ya tienes cuenta?
+        <a href="{{ url_for('auth.login') }}" class="text-[#00C2FF] hover:text-[#0095B6] font-semibold transition">Inicia sesión aquí</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- JS UX: rol, ver contraseña, caps lock, fuerza y consentimiento -->
+<script>
+  function selectRole(role) {
+    document.getElementById('select-cliente').classList.remove('border-[#007BFF]', 'ring-2', 'selected');
+    document.getElementById('select-profesional').classList.remove('border-[#00C2FF]', 'ring-2', 'selected');
+    if (role === 'client') {
+      document.getElementById('select-cliente').classList.add('border-[#007BFF]', 'ring-2', 'ring-[#007BFF]/20', 'selected');
+    } else if (role === 'professional') {
+      document.getElementById('select-profesional').classList.add('border-[#00C2FF]', 'ring-2', 'ring-[#00C2FF]/20', 'selected');
+    }
+    const roleField = document.querySelector('select[name="role"], input[name="role"]');
+    if (roleField) { roleField.value = role; }
+  }
+
+  window.addEventListener('DOMContentLoaded', function () {
+    const roleField = document.querySelector('select[name="role"], input[name="role"]');
+    if (roleField && roleField.value) { selectRole(roleField.value); }
+
+    // Toggle passwords
+    const pass = document.getElementById('password');
+    const pass2 = document.getElementById('password2');
+    const t1 = document.getElementById('togglePass');
+    const t2 = document.getElementById('togglePass2');
+    const caps = document.getElementById('capsWarning');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    const matchInfo = document.getElementById('matchInfo');
+    const consent = document.getElementById('consent');
+    const submitBtn = document.getElementById('submitBtn');
+    const quick = document.getElementById('sanibotQuick');
+
+    function toggleVisibility(input, iconBtn){
+      if(!input || !iconBtn) return;
+      input.type = input.type === 'password' ? 'text' : 'password';
+      iconBtn.querySelector('i')?.classList.toggle('fa-eye-slash');
+    }
+    t1?.addEventListener('click', ()=> toggleVisibility(pass, t1));
+    t2?.addEventListener('click', ()=> toggleVisibility(pass2, t2));
+
+    // Caps lock
+    pass?.addEventListener('keyup', (e)=> {
+      if(!caps) return;
+      caps.classList.toggle('hidden', !e.getModifierState('CapsLock'));
+    });
+
+    // Fuerza de contraseña (simple)
+    function scorePassword(p){
+      let score = 0;
+      if(!p) return 0;
+      const variations = {
+        digits: /\d/.test(p),
+        lower: /[a-z]/.test(p),
+        upper: /[A-Z]/.test(p),
+        nonWords: /[^A-Za-z0-9]/.test(p)
+      };
+      let variationCount = 0;
+      for (let check in variations) variationCount += variations[check] ? 1 : 0;
+      score += (p.length >= 8 ? 40 : p.length * 5) + variationCount * 15;
+      return Math.min(score, 100);
+    }
+
+    function updateStrength(){
+      const val = pass?.value || '';
+      const s = scorePassword(val);
+      strengthBar.style.width = s + '%';
+      let label = 'Débil', color = 'bg-red-400';
+      if (s >= 75) { label = 'Fuerte'; color = 'bg-emerald-500'; }
+      else if (s >= 50) { label = 'Media'; color = 'bg-yellow-400'; }
+      strengthBar.className = 'h-2 ' + color + ' transition-all';
+      strengthText.textContent = 'Fortaleza: ' + label;
+    }
+    pass?.addEventListener('input', updateStrength);
+    updateStrength();
+
+    function updateMatch(){
+      if(!pass || !pass2) return;
+      if(!pass.value && !pass2.value){ matchInfo.textContent = 'Repite la contraseña.'; matchInfo.className='text-gray-500'; return; }
+      const ok = pass.value === pass2.value;
+      matchInfo.textContent = ok ? 'Coinciden ✔' : 'No coinciden';
+      matchInfo.className = ok ? 'text-emerald-600' : 'text-red-600';
+    }
+    pass?.addEventListener('input', updateMatch);
+    pass2?.addEventListener('input', updateMatch);
+
+    // Consentimiento bloquea envío
+    function updateConsent(){ if(submitBtn) submitBtn.disabled = !consent.checked; }
+    consent?.addEventListener('change', updateConsent);
+    updateConsent();
+
+    // Ayuda rápida
+    quick?.addEventListener('click', ()=>{
+      alert(
+`SaniBot:
+• Elige tu tipo de cuenta (Paciente o Profesional).
+• Usa una contraseña segura (8+ caracteres, mayúscula, minúscula, número).
+• Revisa que ambas contraseñas coincidan.
+• Acepta Términos y Privacidad para continuar.`
+      );
+    });
+  });
+</script>
+
+
+
+
+<!-- Modal base (overlay) -->
+<style>
+  .modal-hide { display:none; }
+</style>
+
+<!-- MODAL: Términos y Condiciones -->
+<div id="modalTerms" class="modal-hide fixed inset-0 z-50 flex items-center justify-center">
+  <div class="absolute inset-0 bg-black/40"></div>
+  <div class="relative bg-white max-w-3xl w-[92%] max-h-[80vh] rounded-2xl shadow-2xl overflow-hidden">
+    <div class="flex items-center gap-3 px-6 py-4 border-b">
+      <img src="{{ url_for('static', filename='images/sanibot.png') }}" class="w-10 h-10" alt="Sanibot">
+      <h3 class="text-lg font-bold text-[#0d3b66]">Términos y Condiciones — IndepSalud</h3>
+    </div>
+    <div class="p-6 overflow-y-auto space-y-4 text-sm text-gray-700" style="max-height:58vh">
+      <!-- ====== TEXTO LEGAL RESUMIDO (ajústalo a tus definitivos) ====== -->
+      <p>Estos Términos y Condiciones regulan el uso de la plataforma <strong>IndepSalud</strong>, de propiedad de Leucode SpA, por parte de pacientes y profesionales de la salud.</p>
+
+      <h4 class="font-semibold text-gray-900">1. Aceptación</h4>
+      <p>Al registrarte, declaras haber leído y aceptado íntegramente estos Términos y la Política de Privacidad.</p>
+
+      <h4 class="font-semibold text-gray-900">2. Registro y veracidad</h4>
+      <p>Debes proporcionar información veraz, actualizada y completa. Eres responsable por la actividad realizada con tu cuenta.</p>
+
+      <h4 class="font-semibold text-gray-900">3. Rol de IndepSalud</h4>
+      <p>IndepSalud actúa como intermediario tecnológico entre pacientes y profesionales. La responsabilidad clínica es exclusiva del profesional.</p>
+
+      <h4 class="font-semibold text-gray-900">4. Obligaciones de profesionales</h4>
+      <p>Los profesionales declaran contar con habilitación y acreditaciones vigentes, actuando conforme a la normativa sanitaria de Chile.</p>
+
+      <h4 class="font-semibold text-gray-900">5. Pagos y comisiones</h4>
+      <p>Los servicios pueden incluir comisiones de plataforma. Reembolsos y conciliaciones se rigen por las políticas del medio de pago integrado.</p>
+
+      <h4 class="font-semibold text-gray-900">6. Contenidos y conductas</h4>
+      <p>Está prohibido publicar información engañosa, ilícita o que vulnere derechos de terceros. Podemos suspender cuentas ante incumplimientos.</p>
+
+      <h4 class="font-semibold text-gray-900">7. Responsabilidad</h4>
+      <p>No garantizamos disponibilidad ininterrumpida del servicio. No somos responsables por pérdidas indirectas o lucro cesante.</p>
+
+      <h4 class="font-semibold text-gray-900">8. Modificaciones</h4>
+      <p>Podemos actualizar estos Términos. Los cambios rigen desde su publicación en la plataforma.</p>
+
+      <h4 class="font-semibold text-gray-900">9. Ley aplicable y jurisdicción</h4>
+      <p>Se rigen por las leyes de la República de Chile. Competencia de los tribunales ordinarios de justicia de Santiago.</p>
+
+      <p class="text-xs text-gray-500">Versión: {{ (now() if false) or "" }} (ajusta versión/fecha en tu render si lo deseas)</p>
+    </div>
+    <div class="px-6 py-4 border-t flex justify-end gap-3 bg-gray-50">
+      <button type="button" id="termsCancel" class="px-4 py-2 rounded-lg border hover:bg-gray-100">Cancelar</button>
+      <button type="button" id="termsAccept" class="px-4 py-2 rounded-lg bg-[#007BFF] text-white hover:bg-[#005BB5]">He leído y acepto</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Política de Privacidad -->
+<div id="modalPrivacy" class="modal-hide fixed inset-0 z-50 flex items-center justify-center">
+  <div class="absolute inset-0 bg-black/40"></div>
+  <div class="relative bg-white max-w-3xl w-[92%] max-h-[80vh] rounded-2xl shadow-2xl overflow-hidden">
+    <div class="flex items-center gap-3 px-6 py-4 border-b">
+      <img src="{{ url_for('static', filename='images/sanibot.png') }}" class="w-10 h-10" alt="Sanibot">
+      <h3 class="text-lg font-bold text-[#0d3b66]">Política de Privacidad — IndepSalud</h3>
+    </div>
+    <div class="p-6 overflow-y-auto space-y-4 text-sm text-gray-700" style="max-height:58vh">
+      <!-- ====== TEXTO LEGAL RESUMIDO (ajústalo a tus definitivos) ====== -->
+      <p>IndepSalud trata los datos personales conforme a la Ley N° 19.628 de Chile y normativa aplicable.</p>
+
+      <h4 class="font-semibold text-gray-900">1. Responsable</h4>
+      <p>Leucode SpA (Santiago, Chile) es responsable del tratamiento de datos.</p>
+
+      <h4 class="font-semibold text-gray-900">2. Finalidades</h4>
+      <p>Gestión de cuentas, contacto paciente‑profesional, agendamiento, pagos, notificaciones y mejora de la plataforma.</p>
+
+      <h4 class="font-semibold text-gray-900">3. Conservación</h4>
+      <p>Mientras la cuenta esté activa o hasta solicitar su eliminación, salvo obligaciones legales de conservación.</p>
+
+      <h4 class="font-semibold text-gray-900">4. Comunicación de datos</h4>
+      <p>No vendemos datos. Solo compartimos cuando existe base legal o consentimiento expreso.</p>
+
+      <h4 class="font-semibold text-gray-900">5. Seguridad</h4>
+      <p>Medidas técnicas y organizativas razonables (cifrado en tránsito, control de accesos, registros de auditoría).</p>
+
+      <h4 class="font-semibold text-gray-900">6. Derechos ARCO</h4>
+      <p>Acceso, rectificación, cancelación y oposición en <strong>soporte@indepsalud.cl</strong>.</p>
+
+      <h4 class="font-semibold text-gray-900">7. Transferencias internacionales</h4>
+      <p>Si usamos servicios fuera de Chile, exigimos garantías adecuadas de protección de datos.</p>
+
+      <h4 class="font-semibold text-gray-900">8. Cambios</h4>
+      <p>Podremos actualizar esta política; los cambios rigen desde su publicación.</p>
+
+      <h4 class="font-semibold text-gray-900">9. Jurisdicción</h4>
+      <p>Leyes de Chile y tribunales de Santiago.</p>
+
+      <p class="text-xs text-gray-500">Versión: {{ (now() if false) or "" }}</p>
+    </div>
+    <div class="px-6 py-4 border-t flex justify-end gap-3 bg-gray-50">
+      <button type="button" id="privacyCancel" class="px-4 py-2 rounded-lg border hover:bg-gray-100">Cancelar</button>
+      <button type="button" id="privacyAccept" class="px-4 py-2 rounded-lg bg-[#007BFF] text-white hover:bg-[#005BB5]">He leído y acepto</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock %}

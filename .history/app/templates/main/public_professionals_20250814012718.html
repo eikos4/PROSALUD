@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% block title %}Explora Profesionales – IndepSalud{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gradient-to-b from-[#e6f5fb] to-[#f0faff] py-10">
+  <div class="max-w-7xl mx-auto px-4">
+
+    <!-- HERO DE BENEFICIOS -->
+    <div class="bg-gradient-to-r from-[#007BFF]/90 to-[#00C2FF]/80 rounded-2xl shadow-xl p-10 mb-10 flex flex-col md:flex-row items-center gap-8 border border-[#007BFF]/10 animate-fade-in">
+      <div class="flex-1">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-4 flex items-center gap-3">
+          <i class="fas fa-stethoscope text-white"></i>
+          Conecta con profesionales de la salud certificados
+        </h1>
+        <p class="text-lg text-white/90 font-semibold mb-6">Descubre los beneficios de usar <span class="text-white font-bold">IndepSalud</span>:</p>
+        <ul class="space-y-3 text-white/95 text-base pl-2">
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-300 text-lg"></i> Atención segura y rápida</li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-300 text-lg"></i> Evaluaciones verificadas por pacientes</li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-300 text-lg"></i> Comunicación directa con especialistas</li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-300 text-lg"></i> Accede desde donde estés</li>
+        </ul>
+      </div>
+      <div class="hidden md:block flex-shrink-0">
+        <img src="{{ url_for('static', filename='images/sanibot.png') }}"
+             alt="SaniBot - Asistente virtual"
+             class="w-60 h-60 object-contain drop-shadow-2xl" loading="lazy" decoding="async">
+      </div>
+    </div>
+
+    <!-- HERO GENERAL -->
+    <section class="w-full bg-white shadow-sm pt-10 pb-6 px-4 mb-3 rounded-2xl">
+      <div class="max-w-5xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-black text-[#007BFF] mb-2 tracking-tight">IndepSalud</h1>
+        <h2 class="text-2xl md:text-3xl font-bold text-[#0d3b66] mb-2">Tu salud en manos confiables</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          Encuentra profesionales certificados: médicos generales, psicólogos, nutricionistas y más.<br>
+          Filtra por especialidad, ciudad y reputación. ¡Agenda con confianza!
+        </p>
+      </div>
+    </section>
+
+    <!-- FILTROS -->
+    <form method="GET" class="w-full bg-white shadow px-3 py-6 flex flex-col md:flex-row gap-5 items-center justify-center max-w-5xl mx-auto rounded-2xl mb-6 mt-3" aria-label="Filtros de búsqueda">
+      <div class="w-full md:w-80">
+        <label for="q" class="block text-base font-semibold mb-1 text-[#0d3b66]">¿A quién buscas?</label>
+        <div class="relative">
+          <span class="absolute left-3 top-3 text-gray-400" aria-hidden="true"><i class="fas fa-search"></i></span>
+          <input name="q" id="q" type="text" aria-label="Buscar profesional por nombre o especialidad"
+            class="w-full px-10 py-3 rounded-lg border border-gray-200 focus:border-[#007BFF] focus:ring-1 focus:ring-[#007BFF] text-black bg-[#F6F8FA] placeholder-black/60"
+            placeholder="Ej: Dra. González, Psicólogo, Concepción..." value="{{ request.args.get('q','') }}">
+        </div>
+      </div>
+
+      <div class="w-full md:w-64">
+        <label for="category" class="block text-base font-semibold mb-1 text-[#0d3b66]">Especialidad</label>
+        <select name="category" id="category" aria-label="Filtrar por especialidad"
+          class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#00C2FF] focus:ring-1 focus:ring-[#00C2FF] text-black bg-[#F6F8FA]">
+          <option value="">Todas las especialidades</option>
+          {% for cat in categories %}
+            <option value="{{ cat }}" {% if request.args.get('category')==cat %}selected{% endif %}>{{ cat|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="w-full md:w-56">
+        <label for="city" class="block text-base font-semibold mb-1 text-[#0d3b66]">Ciudad</label>
+        <select name="city" id="city" aria-label="Filtrar por ciudad"
+          class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#007BFF] focus:ring-1 focus:ring-[#007BFF] text-black bg-[#F6F8FA]">
+          <option value="">Todas las ciudades</option>
+          {% for city in cities %}
+            <option value="{{ city }}" {% if request.args.get('city')==city %}selected{% endif %}>{{ city|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="w-full md:w-56">
+        <label for="sort" class="block text-base font-semibold mb-1 text-[#0d3b66]">Ordenar</label>
+        <select name="sort" id="sort" aria-label="Ordenar resultados"
+          class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#007BFF] focus:ring-1 focus:ring-[#007BFF] text-black bg-[#F6F8FA]">
+          <option value="">Relevancia</option>
+          <option value="rating"     {{ 'rating'==request.args.get('sort') and 'selected' or '' }}>Mejor valoración</option>
+          <option value="price_asc"  {{ 'price_asc'==request.args.get('sort') and 'selected' or '' }}>Precio: menor a mayor</option>
+          <option value="price_desc" {{ 'price_desc'==request.args.get('sort') and 'selected' or '' }}>Precio: mayor a menor</option>
+          <option value="exp_desc"   {{ 'exp_desc'==request.args.get('sort') and 'selected' or '' }}>Más experiencia</option>
+        </select>
+      </div>
+
+      <div class="w-full md:w-auto">
+        <label class="block invisible mb-1">&nbsp;</label>
+        <button type="submit" class="w-full px-8 py-3 bg-[#007BFF] hover:bg-[#005BB5] text-white rounded-xl font-bold shadow transition text-lg" aria-label="Aplicar filtros">
+          Buscar
+        </button>
+      </div>
+    </form>
+
+    <!-- Contador + chips de filtros activos -->
+    <div class="max-w-7xl mx-auto px-2 sm:px-0 flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+      <div class="text-sm text-gray-600">
+        {% set total = professionals|length if professionals is not none else 0 %}
+        <span class="font-semibold text-[#0d3b66]">{{ total }}</span> profesionales encontrados
+      </div>
+      {% set chips = [] %}
+      {% if request.args.get('q') %}{% set _=chips.append(['q', request.args.get('q')]) %}{% endif %}
+      {% if request.args.get('category') %}{% set _=chips.append(['category', request.args.get('category')]) %}{% endif %}
+      {% if request.args.get('city') %}{% set _=chips.append(['city', request.args.get('city')]) %}{% endif %}
+      {% if request.args.get('sort') %}{% set _=chips.append(['sort', request.args.get('sort')]) %}{% endif %}
+      {% if chips %}
+        <div class="flex flex-wrap gap-2">
+          {% for k,v in chips %}
+            <span class="inline-flex items-center gap-2 px-3 py-1 bg-white border rounded-full text-sm">
+              <span class="font-semibold">{{ v }}</span>
+              <i class="fas fa-times text-gray-400" aria-hidden="true"></i>
+            </span>
+          {% endfor %}
+          <a href="{{ request.path }}" class="text-sm text-[#007BFF] font-semibold">Limpiar todo</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- PROFESIONALES -->
+    <div class="max-w-7xl mx-auto px-2 sm:px-0 pb-20">
+
+      {% if loading %}
+        <!-- Skeleton de carga -->
+        <div class="grid gap-10 sm:grid-cols-2 xl:grid-cols-3">
+          {% for _ in range(6) %}
+          <div class="bg-white rounded-3xl border p-8 animate-pulse">
+            <div class="w-24 h-24 rounded-full bg-gray-200 mx-auto mb-4"></div>
+            <div class="h-4 bg-gray-200 rounded w-3/4 mx-auto mb-2"></div>
+            <div class="h-3 bg-gray-200 rounded w-5/6 mx-auto"></div>
+            <div class="h-10 bg-gray-200 rounded mt-6"></div>
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="grid gap-10 sm:grid-cols-2 xl:grid-cols-3">
+        {% for prof in professionals %}
+        <article class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all border border-[#E0E7EF] flex flex-col p-8 group relative min-h-[440px] overflow-hidden">
+
+          <!-- Acciones -->
+          <div class="absolute top-4 right-4 flex gap-2">
+            <form method="POST" action="{{ url_for('favorites.toggle', id=prof.id) }}">
+              {{ csrf_token() }}
+              <button type="submit" class="w-9 h-9 rounded-full bg-white/90 border hover:bg-rose-50" title="Guardar">
+                <i class="fas fa-heart {{ 'text-rose-500' if prof.is_favorite else 'text-gray-400' }}"></i>
+              </button>
+            </form>
+            <button type="button" class="w-9 h-9 rounded-full bg-white/90 border hover:bg-gray-50"
+              onclick="navigator.share && navigator.share({title:'{{ (prof.full_name or prof.username)|e }} – IndepSalud', url:'{{ url_for('main.public_profile', id=prof.id, _external=True) }}'})"
+              title="Compartir">
+              <i class="fas fa-share-alt text-gray-500"></i>
+            </button>
+          </div>
+
+          <div class="flex flex-col items-center mb-3">
+            <!-- Borde gradiente del avatar -->
+            <div class="relative w-24 h-24 rounded-full p-0.5 bg-gradient-to-tr from-[#00C2FF] to-[#007BFF] mb-2">
+              <div class="w-full h-full rounded-full overflow-hidden bg-white border border-[#00C2FF]/20">
+                <img src="{{ prof.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+                     class="object-cover w-full h-full group-hover:scale-110 transition duration-300"
+                     alt="Foto de {{ prof.full_name or prof.username or 'Profesional' }}"
+                     loading="lazy" decoding="async">
+              </div>
+              {% if prof.is_online %}
+              <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white bg-green-400 shadow" title="En línea"></span>
+              {% endif %}
+            </div>
+
+            <h3 class="text-xl font-bold text-[#007BFF] mb-1 truncate w-full text-center" title="{{ prof.full_name or prof.username }}">
+              {{ prof.full_name or prof.username or 'Sin nombre' }}
+            </h3>
+
+            {% if prof.verified %}
+            <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 px-3 py-0.5 rounded-full text-xs font-bold shadow-sm mt-1">
+              <i class="fas fa-check-circle"></i> Verificado
+            </span>
+            {% endif %}
+          </div>
+
+          <!-- Etiquetas principales -->
+          <div class="flex flex-wrap justify-center gap-2 mb-2">
+            <span class="inline-flex items-center px-2 py-0.5 bg-[#007BFF]/10 text-[#007BFF] rounded-full text-xs font-bold gap-1">
+              <i class="fas fa-user-md"></i> {{ prof.category|capitalize if prof.category else 'Sin especialidad' }}
+            </span>
+            {% if prof.city %}
+            <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs gap-1">
+              <i class="fas fa-map-marker-alt"></i> {{ prof.city|capitalize }}
+            </span>
+            {% endif %}
+            {% if prof.experience_years %}
+            <span class="inline-flex items-center px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs gap-1">
+              <i class="fas fa-award"></i> {{ prof.experience_years }} años exp.
+            </span>
+            {% endif %}
+          </div>
+
+          <!-- Info clave: modalidad / precio / próxima hora -->
+          <div class="flex flex-wrap justify-center gap-2 mb-3">
+            {% if prof.modality %}
+              <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold">
+                {{ 'Teleconsulta' if prof.modality=='online' else 'Presencial' }}
+              </span>
+            {% endif %}
+            {% if prof.price_from %}
+              <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-bold">
+                Desde ${{ prof.price_from }} CLP
+              </span>
+            {% endif %}
+            {% if prof.next_slot %}
+              <span class="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold">
+                Próxima: {{ prof.next_slot.strftime('%d/%m %H:%M') }}
+              </span>
+            {% endif %}
+          </div>
+
+          {% if prof.specialties %}
+          <div class="flex flex-wrap justify-center gap-2 mb-2">
+            {% for spec in prof.specialties %}
+            <span class="px-2 py-0.5 rounded-full bg-[#00C2FF]/20 text-[#00C2FF] text-xs font-bold">{{ spec }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <p class="text-gray-600 text-sm text-center mb-4 min-h-[44px]">
+            {{ prof.description[:110] if prof.description else 'Sin descripción' }}{% if prof.description and prof.description|length > 110 %}...{% endif %}
+          </p>
+
+          <!-- Rating -->
+          <div class="flex items-center justify-center gap-1 mb-3" aria-label="Valoración">
+            {% if prof.rating %}
+              {% for i in range(1,6) %}
+                {% if prof.rating >= i %}
+                  <i class="fas fa-star text-yellow-400"></i>
+                {% elif prof.rating > (i-1) %}
+                  <i class="fas fa-star-half-alt text-yellow-400"></i>
+                {% else %}
+                  <i class="far fa-star text-gray-300"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="text-gray-600 ml-1 text-sm font-bold">({{ "%.1f"|format(prof.rating) }})</span>
+            {% else %}
+              <span class="text-gray-400 text-sm">Sin calificaciones aún</span>
+            {% endif %}
+          </div>
+
+          <!-- CTA -->
+          <div class="w-full flex flex-col gap-2 mt-auto">
+            <a href="{{ url_for('main.public_profile', id=prof.id) }}"
+               class="w-full py-2 bg-[#007BFF] hover:bg-[#005BB5] text-white rounded-xl font-bold shadow transition group-hover:scale-105 text-center"
+               title="Ver perfil completo de {{ prof.full_name or prof.username }}">
+              <i class="fas fa-user-md"></i> Ver Perfil
+            </a>
+            {% if prof.services and prof.services.count() > 0 %}
+            <a href="{{ url_for('client.request_service', service_id=prof.services.first().id) }}"
+               class="w-full py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold shadow transition group-hover:scale-105 text-center"
+               title="Solicitar el primer servicio disponible">
+              <i class="fas fa-handshake"></i> Solicitar Consulta
+            </a>
+            <a href="{{ url_for('messages.chat', other_id=prof.id, service_id=prof.services.first().id) }}"
+               class="w-full py-2 bg-[#00C2FF] hover:bg-[#0099cc] text-white rounded-xl font-bold shadow transition group-hover:scale-105 text-center"
+               title="Chatear sobre {{ prof.services.first().title }}">
+              <i class="fas fa-comment-dots"></i> Chatear
+            </a>
+            {% endif %}
+          </div>
+        </article>
+        {% else %}
+        <div class="col-span-full text-center py-16">
+          <i class="fas fa-user-slash text-5xl text-gray-300 mb-4"></i>
+          <p class="text-gray-600 text-xl">Aún no hay profesionales registrados.<br>¡Sé el primero en sumarte a IndepSalud!</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- PAGINACIÓN (usa objeto pagination de Flask) -->
+      {% if pagination %}
+      <nav class="mt-8 flex justify-center" aria-label="Paginación">
+        <ul class="inline-flex items-center gap-2">
+          {% if pagination.prev_num %}
+            <li><a class="px-3 py-2 border rounded hover:bg-white"
+                   href="{{ url_for('main.explore', page=pagination.prev_num, **request.args) }}">Anterior</a></li>
+          {% endif %}
+          {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+            {% if p %}
+              <li>
+                <a class="px-3 py-2 border rounded {{ 'bg-[#007BFF] text-white' if p==pagination.page else 'hover:bg-white' }}"
+                   href="{{ url_for('main.explore', page=p, **request.args) }}">{{ p }}</a>
+              </li>
+            {% else %}
+              <li class="px-2 text-gray-400">…</li>
+            {% endif %}
+          {% endfor %}
+          {% if pagination.next_num %}
+            <li><a class="px-3 py-2 border rounded hover:bg-white"
+                   href="{{ url_for('main.explore', page=pagination.next_num, **request.args) }}">Siguiente</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- SaniBot flotante -->
+<button id="sanibot-help" class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#007BFF] shadow-lg hover:scale-105 transition" aria-label="Ayuda de SaniBot">
+  <img src="{{ url_for('static', filename='images/sanibot-icon.png') }}" alt="" class="w-8 h-8 m-auto">
+</button>
+
+<div id="sanibot-popover" class="hidden fixed bottom-24 right-6 max-w-xs bg-white border rounded-xl shadow-xl p-4">
+  <div class="flex items-start gap-3">
+    <img src="{{ url_for('static', filename='images/sanibot-icon.png') }}" class="w-8 h-8" alt="">
+    <div class="text-sm text-gray-700">
+      <p class="font-semibold text-[#0d3b66] mb-1">Hola, soy SaniBot 🤖</p>
+      <p class="mb-2">Busca por <b>especialidad</b>, <b>ciudad</b> o <b>nombre</b>. ¿Quieres ver solo teleconsulta?</p>
+      <div class="flex gap-2">
+        <a href="{{ url_for('main.search') }}?category=&city=&q=&modality=online" class="px-3 py-1.5 bg-[#00C2FF] text-white rounded-lg text-xs">Solo online</a>
+        <button class="px-3 py-1.5 border rounded-lg text-xs" onclick="document.getElementById('q').focus()">Buscar ahora</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes fade-in { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+.animate-fade-in{ animation:fade-in .5s ease both }
+</style>
+
+<script>
+  const btn = document.getElementById('sanibot-help');
+  const pop = document.getElementById('sanibot-popover');
+  btn?.addEventListener('click', ()=> pop.classList.toggle('hidden'));
+</script>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}Iniciar Sesión – PRO SALUD{% endblock %}
+
+{% block content %}
+<!-- CONTENEDOR PRINCIPAL -->
+<div class="relative min-h-screen flex items-center justify-center overflow-hidden">
+
+  <!-- 🎥 VIDEO DE FONDO -->
+  <video autoplay muted loop playsinline
+         class="absolute inset-0 w-full h-full object-cover opacity-70">
+    <source src="{{ url_for('static', filename='videos/fondo_salud.mp4') }}" type="video/mp4">
+    Tu navegador no soporta videos HTML5.
+  </video>
+
+  <!-- 🌈 OVERLAY para mejorar contraste -->
+  <div class="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-blue-600/20 to-white/30 backdrop-blur-[2px]"></div>
+
+  <!-- 💡 CONTENIDO DEL LOGIN -->
+  <div class="relative z-10 flex flex-col md:flex-row w-full max-w-4xl bg-white/80 dark:bg-slate-800/80 shadow-2xl rounded-3xl overflow-hidden backdrop-blur-md">
+
+    <!-- Panel Ilustrativo -->
+    <div class="hidden md:block md:w-1/2 bg-cover bg-center" 
+         style="background-image:url('{{ url_for('static', filename='images/sanibot.png') }}')"></div>
+
+    <!-- Formulario -->
+    <div class="w-full md:w-1/2 p-10">
+      <div class="text-center mb-8">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" 
+             alt="Logo IndepWork Pro" class="mx-auto h-16 drop-shadow-lg">
+        <h2 class="mt-4 text-3xl font-bold text-gray-800 dark:text-white">Bienvenido de nuevo</h2>
+        <p class="text-gray-600 dark:text-gray-400">Accede a tu cuenta para continuar</p>
+      </div>
+
+      <!-- Mensajes FLASH -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-4 mb-6">
+          {% for category, msg in messages %}
+            <div class="p-3 rounded-lg text-center font-medium
+                        {% if category=='success'%} bg-green-100 text-green-700
+                        {% elif category=='danger'%} bg-red-100 text-red-700
+                        {% else %} bg-yellow-100 text-yellow-700 {% endif %}">
+              {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% endwith %}
+
+      <form method="POST" novalidate class="space-y-6" id="loginForm" autocomplete="on">
+        {{ form.hidden_tag() }}
+
+        <!-- Email -->
+        <div>
+          {{ form.email.label(class_='block text-gray-700 dark:text-gray-300 mb-2') }}
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+              <i class="fas fa-envelope"></i>
+            </span>
+            {{ form.email(class_='w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900',
+                          placeholder='Correo electrónico',
+                          autocomplete='email') }}
+          </div>
+          {% if form.email.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.email.errors[0] }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          {{ form.password.label(class_='block text-gray-700 dark:text-gray-300 mb-2') }}
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+              <i class="fas fa-lock"></i>
+            </span>
+            {{ form.password(class_='w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900',
+                             placeholder='Contraseña',
+                             autocomplete='current-password') }}
+          </div>
+          {% if form.password.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.password.errors[0] }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Recordarme y Olvido -->
+        <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+          <label class="flex items-center">
+            {{ form.remember_me(class_='h-4 w-4 mr-2 accent-blue-600') }} Recuérdame
+          </label>
+          <a href="#" class="hover:underline text-blue-600 font-medium">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Botón -->
+        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition">
+          Iniciar Sesión
+        </button>
+      </form>
+
+      <p class="mt-6 text-center text-gray-600 dark:text-gray-400">¿No tienes cuenta?
+        <a href="{{ url_for('auth.register') }}" class="text-blue-600 font-semibold hover:underline">Regístrate</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

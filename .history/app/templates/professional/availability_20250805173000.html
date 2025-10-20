@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block title %}Mi disponibilidad{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-10 px-2 animate-fade-in">
+  <!-- Header -->
+  <div class="flex items-center gap-4 mb-10">
+    <div class="bg-[#276EF1]/10 rounded-full p-3 shadow">
+      <i class="fas fa-calendar-alt text-2xl text-[#276EF1]"></i>
+    </div>
+    <h2 class="text-3xl font-black text-[#276EF1] tracking-tight drop-shadow">Mi Disponibilidad</h2>
+  </div>
+  
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mb-6">
+        {% for category, msg in messages %}
+          <div class="rounded-xl p-3 mb-2 text-center font-semibold shadow animate-fade-in
+              {% if category == 'success' %}bg-green-50 text-green-800 border-l-4 border-green-400
+              {% elif category == 'warning' %}bg-yellow-50 text-yellow-800 border-l-4 border-yellow-400
+              {% elif category == 'danger' %}bg-red-50 text-red-700 border-l-4 border-red-400
+              {% else %}bg-blue-50 text-blue-700 border-l-4 border-blue-400
+              {% endif %}">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Formulario ordenado glass -->
+  <div class="bg-gradient-to-br from-[#f5faff] via-[#eaf2fc] to-[#f7fbff] rounded-3xl shadow-2xl border border-[#276EF1]/10 p-8 mb-12 animate-fade-in-up">
+    <form method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-7 items-end">
+      {{ form.hidden_tag() }}
+
+      <!-- Día de la semana -->
+      <div>
+        <label class="block text-[#276EF1] font-bold mb-1">Día</label>
+        <select name="{{ form.weekday.name }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1] transition" required>
+          <option value="">Selecciona día</option>
+          {% for value, label in form.weekday.choices %}
+            <option value="{{ value }}" {% if form.weekday.data == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.weekday.errors %}
+          <span class="text-red-500 text-xs">{{ form.weekday.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Hora de inicio -->
+      <div>
+        <label class="block text-[#276EF1] font-bold mb-1">Hora de inicio</label>
+        <input
+          type="time"
+          name="{{ form.start_time.name }}"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1] transition"
+          value="{{ form.start_time.data if form.start_time.data else '' }}"
+          required>
+        {% if form.start_time.errors %}
+          <span class="text-red-500 text-xs">{{ form.start_time.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Hora de término -->
+      <div>
+        <label class="block text-[#276EF1] font-bold mb-1">Hora de término</label>
+        <input
+          type="time"
+          name="{{ form.end_time.name }}"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1] transition"
+          value="{{ form.end_time.data if form.end_time.data else '' }}"
+          required>
+        {% if form.end_time.errors %}
+          <span class="text-red-500 text-xs">{{ form.end_time.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Botón -->
+      <div class="flex flex-col justify-end h-full">
+        <label class="invisible">Agregar</label>
+        {{ form.submit(class_="w-full px-6 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-xl font-extrabold shadow-lg transition text-base") }}
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla de horarios -->
+  <div class="bg-white rounded-3xl shadow-xl p-10 border border-[#276EF1]/10 animate-fade-in-up">
+    <h4 class="text-xl font-bold text-[#276EF1] mb-7 flex items-center gap-2">
+      <i class="fas fa-clock"></i> Días y horarios
+    </h4>
+    {% if disponibles %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+          <thead>
+            <tr class="bg-[#f5f7fc]">
+              <th class="px-5 py-3 text-left text-[#164399] font-bold tracking-wide">Día</th>
+              <th class="px-5 py-3 text-left text-[#164399] font-bold tracking-wide">Hora de inicio</th>
+              <th class="px-5 py-3 text-left text-[#164399] font-bold tracking-wide">Hora de término</th>
+              <th class="px-5 py-3 text-center text-[#164399] font-bold tracking-wide">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for slot in disponibles %}
+            <tr class="hover:bg-[#f7faff] transition">
+              <td class="px-5 py-3 font-semibold text-[#1E293B] whitespace-nowrap flex items-center gap-2">
+                <i class="far fa-calendar-check text-[#FF8800]"></i>
+                {{ slot.weekday }}
+              </td>
+              <td class="px-5 py-3 text-[#276EF1] whitespace-nowrap font-bold">{{ slot.start_time.strftime('%H:%M') }}</td>
+              <td class="px-5 py-3 text-[#276EF1] whitespace-nowrap font-bold">{{ slot.end_time.strftime('%H:%M') }}</td>
+              <td class="px-5 py-3 text-center">
+                <form action="{{ url_for('professional.delete_availability', id=slot.id) }}" method="POST" onsubmit="return confirm('¿Eliminar esta disponibilidad?');">
+                  {{ delete_form.csrf_token }}
+                  <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center gap-2 shadow font-bold text-xs transition" title="Eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                    <span class="hidden sm:inline">Eliminar</span>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-gray-400 text-center py-10 text-lg flex flex-col items-center animate-fade-in">
+        <i class="fas fa-info-circle text-3xl mb-3"></i>
+        No tienes disponibilidad agregada.
+      </div>
+    {% endif %}
+  </div>
+</div>
+<style>
+  @keyframes fade-in {0%{opacity:0;}100%{opacity:1;}}
+  .animate-fade-in {animation: fade-in 1.2s cubic-bezier(.6,0,.4,1);}
+  @keyframes fade-in-up {0%{opacity:0;transform:translateY(35px);}100%{opacity:1;transform:none;}}
+  .animate-fade-in-up {animation: fade-in-up 1s cubic-bezier(.6,0,.4,1);}
+  @media (max-width: 700px) {
+    .rounded-3xl, .rounded-2xl { border-radius: 1.1rem !important; }
+    .p-10 { padding: 2rem !important; }
+    .p-8 { padding: 1.4rem !important; }
+    .px-5, .py-3 { padding-left: .7rem !important; padding-right: .7rem !important; padding-top: .7rem !important; padding-bottom: .7rem !important; }
+    .text-xl { font-size: 1.1rem !important;}
+  }
+</style>
+{% endblock %}

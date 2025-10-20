@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% block title %}Explora Profesionales – IndepSALUD{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gradient-to-b from-[#e6f5fb] to-[#f0faff] py-10">
+  <div class="max-w-7xl mx-auto px-4">
+
+    <!-- HERO DE BENEFICIOS -->
+    <div class="bg-gradient-to-r from-[#007BFF]/90 to-[#00C2FF]/80 rounded-2xl shadow-xl p-10 mb-10 flex flex-col md:flex-row items-center gap-8 border border-[#007BFF]/10 animate-fade-in">
+      <div class="flex-1">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-4 flex items-center gap-3">
+          <i class="fas fa-stethoscope text-white"></i>
+          Conecta con profesionales de la salud certificados
+        </h1>
+        <p class="text-lg text-white/90 font-semibold mb-6">Descubre todos los beneficios de usar <span class="text-[#fff] font-bold">IndepSALUD</span>:</p>
+        <ul class="space-y-3 text-white/95 text-base pl-2">
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-300 text-lg"></i> Atención médica segura y rápida</li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-300 text-lg"></i> Evaluaciones verificadas por pacientes reales</li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-300 text-lg"></i> Comunicación directa con especialistas</li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-300 text-lg"></i> Accede a salud desde donde estés</li>
+        </ul>
+      </div>
+      <div class="hidden md:block flex-shrink-0">
+        <img src="{{ url_for('static', filename='images/sanibot.png') }}" alt="Beneficios" class="w-60 h-60 object-contain drop-shadow-2xl">
+      </div>
+    </div>
+
+
+    <!-- HERO DE BENEFICIOS (presentado por SaniBot) -->
+<section class="relative bg-gradient-to-r from-[#007BFF]/90 to-[#00C2FF]/80 rounded-2xl shadow-xl p-8 md:p-10 mb-10 border border-[#007BFF]/10 overflow-hidden" aria-labelledby="beneficios-title">
+  <!-- Decor -->
+  <div class="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full bg-white/10 blur-3xl"></div>
+  <div class="pointer-events-none absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-white/10 blur-3xl"></div>
+
+  <div class="flex flex-col md:flex-row items-center gap-10 relative z-10">
+    <!-- SaniBot + globo -->
+    <div class="flex-1 flex items-center gap-4 md:gap-6">
+      <div class="relative">
+        <img
+          src="{{ url_for('static', filename='images/sanibot.png') }}"
+          alt="SaniBot, tu asistente virtual"
+          class="w-36 h-36 md:w-48 md:h-48 object-contain drop-shadow-2xl animate-[float_4s_ease-in-out_infinite]"
+          loading="lazy" decoding="async"
+        />
+        <!-- Aro flotante -->
+        <div class="absolute -z-10 inset-0 translate-y-3 blur-lg rounded-full bg-white/20"></div>
+      </div>
+
+      <!-- Globo de presentación -->
+      <div class="bg-white/95 text-[#0d3b66] rounded-2xl px-4 py-3 md:px-5 md:py-4 shadow-lg max-w-sm md:max-w-md relative">
+        <span class="absolute -left-2 top-6 w-4 h-4 rotate-45 bg-white/95 shadow" aria-hidden="true"></span>
+        <p class="text-sm md:text-base leading-relaxed">
+          <span class="font-extrabold text-[#007BFF]">Hola, soy SaniBot.</span><br>
+          Te ayudo a encontrar <strong>profesionales certificados</strong>, filtrar por <strong>especialidad</strong> y agendar <strong>en minutos</strong>.
+        </p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <a href="{{ url_for('main.search') }}?modality=online" class="px-3 py-1.5 text-xs md:text-sm rounded-full bg-[#00C2FF] text-white font-semibold hover:bg-[#00A8D8] transition">
+            Ver solo Teleconsulta
+          </a>
+          <button type="button" onclick="document.getElementById('q')?.focus()"
+                  class="px-3 py-1.5 text-xs md:text-sm rounded-full bg-white border border-[#007BFF]/30 text-[#007BFF] font-semibold hover:bg-[#007BFF]/10 transition">
+            Buscar ahora
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Texto y beneficios -->
+    <div class="flex-1">
+      <h1 id="beneficios-title" class="text-3xl md:text-4xl font-extrabold text-white mb-3 flex items-center gap-3">
+        <i class="fas fa-stethoscope" aria-hidden="true"></i>
+        Conecta con profesionales de la salud certificados
+      </h1>
+
+      <p class="text-white/95 text-base md:text-lg font-medium mb-5">
+        Descubre por qué <span class="font-bold">IndepSalud</span> es la forma más rápida y segura de obtener atención.
+      </p>
+
+      <ul class="space-y-3 text-white/95 text-base pl-1">
+        <li class="flex items-start gap-3">
+          <i class="fas fa-check-circle text-green-300 mt-0.5" aria-hidden="true"></i>
+          <span><strong>Atención segura y rápida</strong>: agenda en minutos y recibe confirmación.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <i class="fas fa-check-circle text-green-300 mt-0.5" aria-hidden="true"></i>
+          <span><strong>Evaluaciones verificadas</strong> por pacientes reales.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <i class="fas fa-check-circle text-green-300 mt-0.5" aria-hidden="true"></i>
+          <span><strong>Comunicación directa</strong> con especialistas.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <i class="fas fa-check-circle text-green-300 mt-0.5" aria-hidden="true"></i>
+          <span><strong>Teleconsulta o presencial</strong>, donde estés.</span>
+        </li>
+      </ul>
+
+      <!-- Badges confianza + CTAs -->
+      <div class="mt-6 flex flex-col md:flex-row md:items-center gap-4">
+        <div class="flex flex-wrap items-center gap-3 text-white/90 text-sm">
+          <span class="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
+            <i class="fas fa-id-badge" aria-hidden="true"></i> Perfiles verificados
+          </span>
+          <span class="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
+            <i class="fas fa-shield-alt" aria-hidden="true"></i> Pagos protegidos
+          </span>
+          <span class="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
+            <i class="fas fa-lock" aria-hidden="true"></i> Datos cifrados
+          </span>
+        </div>
+
+        <div class="flex gap-3 md:ml-auto">
+          <a href="{{ url_for('main.search') }}"
+             class="px-5 py-2.5 rounded-xl bg-white text-[#007BFF] font-bold shadow hover:shadow-md hover:-translate-y-0.5 transition">
+            Buscar profesionales
+          </a>
+          <a href="{{ url_for('auth.register') }}"
+             class="px-5 py-2.5 rounded-xl bg-[#0d3b66] text-white font-bold shadow hover:bg-[#0b2f55] hover:-translate-y-0.5 transition">
+            Registrarme
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Animación flotante -->
+<style>
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+</style>
+
+
+
+
+
+
+    <!-- HERO GENERAL -->
+    <section class="w-full bg-white shadow-sm pt-10 pb-6 px-4 mb-3 rounded-2xl">
+      <div class="max-w-5xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-black text-[#007BFF] mb-2 tracking-tight">IndepSALUD</h1>
+        <h2 class="text-2xl md:text-3xl font-bold text-[#0d3b66] mb-2">
+          Tu salud en manos confiables
+        </h2>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          Encuentra profesionales certificados: médicos generales, psicólogos, nutricionistas y más.<br>
+          Filtra por especialidad, ciudad y reputación. ¡Agenda con confianza!
+        </p>
+      </div>
+    </section>
+
+    <!-- FILTROS -->
+    <form method="GET" class="w-full bg-white shadow px-3 py-6 flex flex-col md:flex-row gap-5 items-center justify-center max-w-5xl mx-auto rounded-2xl mb-8 mt-3">
+      <div class="w-full md:w-80">
+        <label for="q" class="block text-base font-semibold mb-1 text-[#0d3b66]">¿A quién buscas?</label>
+        <div class="relative">
+          <span class="absolute left-3 top-3 text-gray-400"><i class="fas fa-search"></i></span>
+          <input name="q" id="q" type="text"
+            class="w-full px-10 py-3 rounded-lg border border-gray-200 focus:border-[#007BFF] focus:ring-1 focus:ring-[#007BFF] text-black bg-[#F6F8FA] placeholder-black/60"
+            placeholder="Ej: Dra. González, Psicólogo, Concepción..." value="{{ request.args.get('q','') }}">
+        </div>
+      </div>
+      <div class="w-full md:w-64">
+        <label for="category" class="block text-base font-semibold mb-1 text-[#0d3b66]">Especialidad</label>
+        <select name="category" id="category"
+          class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#00C2FF] focus:ring-1 focus:ring-[#00C2FF] text-black bg-[#F6F8FA]">
+          <option value="">Todas las especialidades</option>
+          {% for cat in categories %}
+            <option value="{{ cat }}" {% if request.args.get('category')==cat %}selected{% endif %}>{{ cat|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="w-full md:w-56">
+        <label for="city" class="block text-base font-semibold mb-1 text-[#0d3b66]">Ciudad</label>
+        <select name="city" id="city"
+          class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#007BFF] focus:ring-1 focus:ring-[#007BFF] text-black bg-[#F6F8FA]">
+          <option value="">Todas las ciudades</option>
+          {% for city in cities %}
+            <option value="{{ city }}" {% if request.args.get('city')==city %}selected{% endif %}>{{ city|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block invisible mb-1">&nbsp;</label>
+        <button type="submit" class="px-8 py-3 bg-[#007BFF] hover:bg-[#005BB5] text-white rounded-xl font-bold shadow transition text-lg w-full">
+          Buscar
+        </button>
+      </div>
+    </form>
+
+    <!-- PROFESIONALES -->
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 pb-20">
+      <div class="grid gap-10 sm:grid-cols-2 xl:grid-cols-3">
+        {% for prof in professionals %}
+        <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all border border-[#E0E7EF] flex flex-col p-8 group relative min-h-[430px] overflow-hidden">
+          <div class="flex flex-col items-center mb-3">
+            <div class="relative w-24 h-24 rounded-full border-4 border-[#00C2FF]/30 shadow overflow-hidden bg-[#F6F8FA] flex items-center justify-center mb-2">
+              <img src="{{ prof.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+                class="object-cover w-full h-full group-hover:scale-110 transition duration-300"
+                alt="{{ prof.full_name or prof.username or 'Profesional' }}">
+              {% if prof.is_online %}
+                <span class="absolute bottom-2 right-2 w-5 h-5 rounded-full border-2 border-white bg-green-400 ring ring-white shadow"></span>
+              {% endif %}
+            </div>
+            <h3 class="text-xl font-bold text-[#007BFF] mb-1 truncate w-full text-center" title="{{ prof.full_name or prof.username }}">
+              {{ prof.full_name or prof.username or 'Sin nombre' }}
+            </h3>
+            {% if prof.verified %}
+              <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 px-3 py-0.5 rounded-full text-xs font-bold shadow-sm mt-1">
+                <i class="fas fa-check-circle"></i> Verificado
+              </span>
+            {% endif %}
+          </div>
+          <div class="flex flex-wrap justify-center gap-2 mb-2">
+            <span class="inline-flex items-center px-2 py-0.5 bg-[#007BFF]/10 text-[#007BFF] rounded-full text-xs font-bold gap-1">
+              <i class="fas fa-user-md"></i> {{ prof.category|capitalize if prof.category else 'Sin especialidad' }}
+            </span>
+            {% if prof.city %}
+            <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full text-xs gap-1">
+              <i class="fas fa-map-marker-alt"></i> {{ prof.city|capitalize }}
+            </span>
+            {% endif %}
+            {% if prof.experience_years %}
+            <span class="inline-flex items-center px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs gap-1">
+              <i class="fas fa-award"></i> {{ prof.experience_years }} años exp.
+            </span>
+            {% endif %}
+          </div>
+          {% if prof.specialties %}
+          <div class="flex flex-wrap justify-center gap-2 mb-2">
+            {% for spec in prof.specialties %}
+            <span class="px-2 py-0.5 rounded-full bg-[#00C2FF]/20 text-[#00C2FF] text-xs font-bold">
+              {{ spec }}
+            </span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <p class="text-gray-600 text-sm text-center mb-4 min-h-[44px]">
+            {{ prof.description[:110] if prof.description else 'Sin descripción' }}{% if prof.description and prof.description|length > 110 %}...{% endif %}
+          </p>
+          <div class="flex items-center justify-center gap-1 mb-3">
+            {% if prof.rating %}
+              {% for i in range(1,6) %}
+                {% if prof.rating >= i %}
+                  <i class="fas fa-star text-yellow-400"></i>
+                {% elif prof.rating > (i-1) %}
+                  <i class="fas fa-star-half-alt text-yellow-400"></i>
+                {% else %}
+                  <i class="far fa-star text-gray-300"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="text-gray-600 ml-1 text-sm font-bold">({{ "%.1f"|format(prof.rating) }})</span>
+            {% else %}
+              <span class="text-gray-400 text-sm">Sin calificaciones aún</span>
+            {% endif %}
+          </div>
+          <div class="w-full flex flex-col gap-2 mt-auto">
+            <a href="{{ url_for('main.public_profile', id=prof.id) }}"
+               class="w-full py-2 bg-[#007BFF] hover:bg-[#005BB5] text-white rounded-xl font-bold shadow transition group-hover:scale-105 text-center"
+               title="Ver perfil completo de {{ prof.full_name or prof.username }}">
+              <i class="fas fa-user-md"></i> Ver Perfil
+            </a>
+            {% if prof.services.count() > 0 %}
+            <a href="{{ url_for('client.request_service', service_id=prof.services.first().id) }}"
+               class="w-full py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold shadow transition group-hover:scale-105 text-center"
+               title="Solicitar el primer servicio disponible">
+              <i class="fas fa-handshake"></i> Solicitar Consulta
+            </a>
+            <a href="{{ url_for('messages.chat', other_id=prof.id, service_id=prof.services.first().id) }}"
+               class="w-full py-2 bg-[#00C2FF] hover:bg-[#0099cc] text-white rounded-xl font-bold shadow transition group-hover:scale-105 text-center"
+               title="Chatear sobre {{ prof.services.first().title }}">
+              <i class="fas fa-comment-dots"></i> Chatear
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        {% else %}
+        <div class="col-span-full text-center py-16">
+          <i class="fas fa-user-slash text-5xl text-gray-300 mb-4"></i>
+          <p class="text-gray-600 text-xl">Aún no hay profesionales registrados.<br>¡Sé el primero en sumarte a PROSALUD!</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

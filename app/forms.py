@@ -1,30 +1,24 @@
 # app/forms.py
-
 from flask_wtf import FlaskForm
 from wtforms import DecimalField, StringField, PasswordField, BooleanField, TextAreaField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from wtforms.widgets import TimeInput
-
-
 from wtforms import StringField, TextAreaField, DecimalField, SubmitField
 from wtforms.validators import DataRequired, Length, NumberRange
 from wtforms.validators import NumberRange
-
 from flask_wtf.file import FileField, FileAllowed
-
-
-
-
-
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, Optional
+from wtforms import PasswordField, BooleanField
+from wtforms.validators import Length
+from flask_wtf import FlaskForm
+from wtforms.validators import Optional
 
 class ClientProfileForm(FlaskForm):
-    full_name = StringField('Nombre Completo', validators=[DataRequired(), Length(max=100)])
-    email     = StringField('Correo Electrónico', validators=[DataRequired(), Email(), Length(max=150)])
-    phone     = StringField('Teléfono', validators=[Optional(), Length(max=20)])
-    location  = StringField('Ciudad / Región', validators=[Optional(), Length(max=80)])
-    submit    = SubmitField('Guardar cambios')
+    username = StringField('Nombre de Usuario', validators=[DataRequired(), Length(max=100)])
+    email    = StringField('Correo Electrónico', validators=[DataRequired(), Email(), Length(max=150)])
+    phone    = StringField('Teléfono', validators=[Optional(), Length(max=20)])
+    location = StringField('Ciudad / Región', validators=[Optional(), Length(max=80)])
+    submit   = SubmitField('Guardar cambios')
+
 
 class LoginForm(FlaskForm):
     email = StringField('Correo', validators=[DataRequired(), Email(), Length(max=120)])
@@ -32,7 +26,6 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Recuérdame')
     submit = SubmitField('Iniciar sesión')
 
-# app/forms.py
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
@@ -199,19 +192,6 @@ class ResponseRequestForm(FlaskForm):
     submit = SubmitField('Enviar')
 
 
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, Optional, Length
-
-class ClientProfileForm(FlaskForm):
-    name = StringField('Nombre', validators=[DataRequired(), Length(max=100)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Nueva contraseña', validators=[Optional(), Length(min=6)])
-    submit = SubmitField('Guardar cambios')
-
-
-
-
 class RequestServiceForm(FlaskForm):
     message = TextAreaField('Mensaje para el profesional', validators=[DataRequired(), Length(max=500)])
     submit = SubmitField('Enviar solicitud')
@@ -237,3 +217,10 @@ from wtforms import SubmitField
 class UpgradeAccountForm(FlaskForm):
     submit = SubmitField('Cambiar a profesional')
 
+
+# app/forms.py
+
+from flask_wtf import FlaskForm
+
+class DeleteForm(FlaskForm):
+    pass  # Solo lo usamos para el token CSRF

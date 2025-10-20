@@ -1,0 +1,413 @@
+{% extends 'base.html' %}
+{% block title %}Evaluaciones recibidas – IndepSalud{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 px-2 animate-fade-in">
+
+  <!-- Header -->
+  <div class="flex items-center gap-4 mb-6">
+    <div class="bg-[#FF8800]/20 rounded-full p-3 shadow">
+      <i class="fas fa-star-half-alt text-2xl text-[#FF8800]"></i>
+    </div>
+    <h2 class="text-3xl font-black text-[#276EF1] tracking-tight">Evaluaciones de pacientes</h2>
+  </div>
+
+  <!-- SaniBot -->
+  <div class="bg-white rounded-2xl border border-indigo-100 shadow p-5 mb-8 flex items-start gap-4">
+    <img src="{{ url_for('static', filename='images/sanibot.png') }}" alt="SaniBot" class="w-12 h-12 rounded-full shadow">
+    <div class="flex-1">
+      <h3 class="text-lg font-bold text-[#0d3b66]">Hola, soy SaniBot 🤖</h3>
+      <p class="text-gray-600 mt-1">
+        Aquí puedes ver y gestionar tus <strong>evaluaciones</strong>. ¿Quieres una guía rápida o consejos para mejorar tu reputación?
+      </p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button id="btnTourReviews" type="button"
+          class="px-4 py-2 rounded-lg bg-[#276EF1] text-white font-semibold hover:bg-[#1E5BB8] shadow">
+          Guía rápida
+        </button>
+        <button id="btnTipsReviews" type="button"
+          class="px-4 py-2 rounded-lg bg-white text-[#276EF1] border border-[#276EF1]/40 font-semibold hover:bg-[#E6F2FF] shadow">
+          Tips para subir tu rating
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {% if evaluaciones %}
+  <!-- Resumen -->
+  <div id="summaryBox" class="bg-gradient-to-br from-[#f7fbff] to-[#ecf3ff] border border-[#276EF1]/10 rounded-2xl shadow p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="flex items-center gap-4">
+        <div class="bg-[#276EF1]/10 p-3 rounded-full">
+          <i class="fas fa-star text-2xl text-[#276EF1]"></i>
+        </div>
+        <div>
+          <div class="text-3xl font-black text-[#276EF1]" id="avgRating">{{ avg_rating or "-" }}</div>
+          <div class="text-sm text-gray-600">Promedio</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="bg-[#FF8800]/10 p-3 rounded-full">
+          <i class="fas fa-users text-2xl text-[#FF8800]"></i>
+        </div>
+        <div>
+          <div class="text-3xl font-black text-[#FF8800]" id="totalReviews">{{ evaluaciones|length }}</div>
+          <div class="text-sm text-gray-600">Total de evaluaciones</div>
+        </div>
+      </div>
+      <div>
+        <!-- Distribución -->
+        <div class="space-y-1" id="distBox">
+          {% for s in [5,4,3,2,1] %}
+          <div class="flex items-center gap-2">
+            <span class="w-8 text-sm text-gray-600">{{ s }}★</span>
+            <div class="flex-1 h-2 bg-gray-100 rounded">
+              <div class="h-2 bg-[#276EF1]" style="width: 0%" data-stars="{{ s }}"></div>
+            </div>
+            <span class="w-10 text-right text-xs text-gray-500 count-{{ s }}">0</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div id="filtersBox" class="bg-white border border-[#276EF1]/10 rounded-2xl shadow p-4 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+      <div>
+        <label class="block text-sm text-gray-600 mb-1">Filtrar por estrellas</label>
+        <select id="fStars" class="w-full px-3 py-2 border rounded-lg">
+          <option value="">Todas</option>
+          <option value="5">5 estrellas</option>
+          <option value="4">4 estrellas</option>
+          <option value="3">3 estrellas</option>
+          <option value="2">2 estrellas</option>
+          <option value="1">1 estrella</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600 mb-1">Ordenar por</label>
+        <select id="fSort" class="w-full px-3 py-2 border rounded-lg">
+          <option value="date_desc">Más recientes</option>
+          <option value="date_asc">Más antiguas</option>
+          <option value="rating_desc">Mejor rating</option>
+          <option value="rating_asc">Peor rating</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600 mb-1">Buscar paciente</label>
+        <input id="fSearch" type="text" class="w-full px-3 py-2 border rounded-lg" placeholder="Ej: Juan, maria@...">
+      </div>
+      <div class="flex gap-2">
+        <button id="btnApply" class="px-4 py-2 bg-[#276EF1] text-white rounded-lg font-semibold hover:bg-[#1E5BB8] w-full">Aplicar</button>
+        <button id="btnClear" class="px-4 py-2 bg-white border rounded-lg font-semibold w-full">Limpiar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista -->
+  <div id="reviewsList" class="space-y-8">
+    {% for ev in evaluaciones %}
+    <div class="review-card bg-white rounded-3xl shadow-xl border border-[#276EF1]/10 group flex gap-6 p-8 items-center transition-all duration-300 hover:shadow-2xl hover:border-[#276EF1]/30 hover:ring-4 hover:ring-[#276EF1]/10 relative animate-fade-in-up"
+         data-rating="{{ ev.rating }}"
+         data-date="{{ ev.created_at.isoformat() if ev.created_at else '' }}"
+         data-client="{{ (ev.client.full_name or ev.client.username)|lower }}">
+      {% if loop.index0 == 0 %}
+      <span class="absolute -top-4 left-5 bg-gradient-to-r from-[#FF8800] to-[#ffd700] text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-bounce">¡Nueva!</span>
+      {% endif %}
+
+      <!-- Avatar -->
+      <div class="flex flex-col items-center flex-shrink-0 w-28">
+        <div class="relative">
+          <img src="{{ ev.client.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+               alt="{{ ev.client.username }}"
+               class="w-24 h-24 rounded-full object-cover border-4 border-[#276EF1]/50 shadow group-hover:scale-105 transition duration-300">
+          <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#f6fbff] text-[#276EF1] px-2 py-0.5 rounded-full text-xs font-bold border border-[#276EF1]/20 shadow">Paciente</span>
+        </div>
+        <span class="mt-4 text-sm text-[#276EF1] font-bold truncate max-w-[100px]" title="{{ ev.client.username }}">
+          <i class="fas fa-user-circle"></i> {{ ev.client.username }}
+        </span>
+      </div>
+
+      <!-- Contenido -->
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4 mb-2">
+          <div class="flex gap-1 items-center text-lg">
+            {% for i in range(1, 5+1) %}
+              {% if i <= ev.rating %}
+                <i class="fas fa-star text-yellow-400 animate-star"></i>
+              {% else %}
+                <i class="far fa-star text-gray-200"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <span class="mt-1 sm:mt-0 text-xs text-gray-500 font-semibold flex items-center gap-1">
+            <i class="fas fa-calendar-alt"></i>
+            <time class="rev-date" datetime="{{ ev.created_at.isoformat() if ev.created_at else '' }}">
+              {{ ev.created_at.strftime('%d-%m-%Y') if ev.created_at else '—' }}
+            </time>
+            <button type="button" class="text-[#276EF1] underline text-[11px] ml-1 copy-date">copiar</button>
+          </span>
+        </div>
+
+        <!-- Comentario -->
+        <div class="bg-[#e6f3ff]/70 border-l-4 border-[#276EF1] p-4 rounded-xl text-[#164399] text-base font-semibold mb-2 leading-snug shadow-sm">
+          <i class="fas fa-comment-medical mr-1 text-[#276EF1]"></i>
+          <span class="rev-comment" data-full="{{ ev.comment or 'Sin comentario' }}">
+            {{ (ev.comment or 'Sin comentario') | truncate(160) }}
+          </span>
+          {% if ev.comment and ev.comment|length > 160 %}
+          <button type="button" class="ml-2 text-xs text-[#276EF1] underline toggle-comment">ver más</button>
+          {% endif %}
+        </div>
+
+        <span class="text-xs text-gray-500 italic block">
+          Servicio calificado por <span class="text-[#276EF1] font-bold">{{ ev.client.full_name or ev.client.username }}</span>
+        </span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Paginación simple (cliente) -->
+  <div id="pager" class="flex justify-center gap-2 mt-8">
+    <button class="px-3 py-1 rounded border" data-page="prev">Anterior</button>
+    <span class="px-3 py-1 text-sm text-gray-600" id="pageInfo">1 / 1</span>
+    <button class="px-3 py-1 rounded border" data-page="next">Siguiente</button>
+  </div>
+
+  {% else %}
+  <!-- Empty state -->
+  <div class="text-center text-gray-400 mt-14 bg-white rounded-3xl shadow-xl p-12 border border-[#276EF1]/10 animate-fade-in-up">
+    <i class="fas fa-info-circle text-5xl mb-4 text-[#FF8800]"></i>
+    <p class="text-2xl font-black mb-2 text-[#164399]">Todavía no tienes evaluaciones</p>
+    <p class="text-base text-[#276EF1]">Cuando un paciente califique tu servicio, aparecerá aquí.</p>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Modal SaniBot -->
+<style>.sanibot-modal{display:none}</style>
+<div id="sanibotReviewsModal" class="sanibot-modal fixed inset-0 z-50 flex items-center justify-center">
+  <div class="absolute inset-0 bg-black/40"></div>
+  <div class="relative bg-white max-w-2xl w-[92%] rounded-2xl shadow-2xl overflow-hidden">
+    <div class="flex items-center gap-3 px-6 py-4 border-b">
+      <img src="{{ url_for('static', filename='images/sanibot.png') }}" class="w-10 h-10" alt="SaniBot">
+      <h3 id="sanibotReviewsTitle" class="text-lg font-bold text-[#0d3b66]">Guía — Evaluaciones</h3>
+    </div>
+    <div id="sanibotReviewsBody" class="p-6 space-y-4 text-sm text-gray-700"></div>
+    <div class="px-6 py-4 border-t bg-gray-50 flex justify-end gap-2">
+      <button id="sanibotReviewsClose" type="button" class="px-4 py-2 rounded-lg border hover:bg-gray-100">Cerrar</button>
+      <button id="sanibotReviewsNext" type="button" class="px-4 py-2 rounded-lg bg-[#276EF1] text-white hover:bg-[#1E5BB8]">Siguiente</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes star-pop {0%{transform:scale(.8);}50%{transform:scale(1.3);}100%{transform:scale(1);}}
+  .animate-star { animation: star-pop 0.5s cubic-bezier(.7,.2,.3,1) }
+  @keyframes fade-in-up {0%{opacity:0;transform:translateY(40px);}100%{opacity:1;transform:none;}}
+  .animate-fade-in-up {animation: fade-in-up 1s cubic-bezier(.6,0,.4,1) forwards;}
+  @keyframes fade-in {0%{opacity:0;}100%{opacity:1;}}
+  .animate-fade-in {animation: fade-in 1.1s cubic-bezier(.6,0,.4,1) forwards;}
+  @keyframes bounce {0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+  .animate-bounce { animation: bounce 1.1s cubic-bezier(.53,.21,.29,1) 2; }
+  .ring-highlight { box-shadow: 0 0 0 4px rgba(39,110,241,.35); border-radius: 1rem; transition: box-shadow .25s ease; }
+</style>
+
+<script>
+(function(){
+  // ===== Utilidades =====
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+  const cards = $$('.review-card');
+
+  // Resumen (si backend no lo pasó)
+  function computeSummary(){
+    if (!cards.length) return;
+    const ratings = cards.map(c => Number(c.dataset.rating || 0));
+    const total = ratings.length;
+    const sum = ratings.reduce((a,b)=>a+b,0);
+    const avg = (sum/Math.max(total,1)).toFixed(2);
+    const dist = {1:0,2:0,3:0,4:0,5:0};
+    ratings.forEach(r => { if (dist[r] !== undefined) dist[r]++; });
+
+    const avgEl = $('#avgRating'); if (avgEl && (avgEl.textContent === '-' || !avgEl.textContent.trim())) avgEl.textContent = avg;
+    const totalEl = $('#totalReviews'); if (totalEl) totalEl.textContent = total;
+
+    Object.entries(dist).forEach(([stars, count])=>{
+      const bar = document.querySelector(`#distBox [data-stars="${stars}"]`);
+      const cnt = document.querySelector(`.count-${stars}`);
+      if (bar){ bar.style.width = (100 * count / Math.max(total,1)) + '%'; }
+      if (cnt){ cnt.textContent = count; }
+    });
+  }
+  computeSummary();
+
+  // ===== Filtros en cliente =====
+  const fStars = $('#fStars');
+  const fSort  = $('#fSort');
+  const fSearch= $('#fSearch');
+  const btnApply = $('#btnApply');
+  const btnClear = $('#btnClear');
+
+  let pageSize = 6;
+  let currentPage = 1;
+  let currentView = [...cards];
+
+  function renderView(list){
+    const container = $('#reviewsList');
+    container.innerHTML = '';
+    list.forEach(c => container.appendChild(c));
+  }
+
+  function paginate(list){
+    const totalPages = Math.max(1, Math.ceil(list.length / pageSize));
+    const start = (currentPage - 1) * pageSize;
+    const end   = start + pageSize;
+    $$('.review-card').forEach((c, idx) => { c.style.display = (idx>=start && idx<end) ? '' : 'none'; });
+    $('#pageInfo').textContent = `${currentPage} / ${totalPages}`;
+    return totalPages;
+  }
+
+  function applyFilters(){
+    const stars = fStars.value;
+    const sort  = fSort.value;
+    const q     = (fSearch.value || '').trim().toLowerCase();
+
+    let view = [...cards];
+
+    if (stars) view = view.filter(c => Number(c.dataset.rating) === Number(stars));
+    if (q)     view = view.filter(c => (c.dataset.client || '').includes(q));
+
+    const byDate   = (a,b) => new Date(a.dataset.date || 0) - new Date(b.dataset.date || 0);
+    const byRating = (a,b) => Number(a.dataset.rating) - Number(b.dataset.rating);
+    if (sort === 'date_desc') view.sort((a,b)=> byDate(b,a));
+    else if (sort === 'date_asc') view.sort(byDate);
+    else if (sort === 'rating_desc') view.sort((a,b)=> byRating(b,a));
+    else if (sort === 'rating_asc') view.sort(byRating);
+
+    currentPage = 1;
+    currentView = view;
+    renderView(view);
+    paginate(view);
+  }
+
+  btnApply?.addEventListener('click', (e)=>{ e.preventDefault(); applyFilters(); });
+  btnClear?.addEventListener('click', (e)=>{
+    e.preventDefault();
+    fStars.value = '';
+    fSort.value  = 'date_desc';
+    fSearch.value= '';
+    applyFilters();
+  });
+
+  // ===== Expandir/comprimir comentario =====
+  function wireToggleComments(scope=document){
+    scope.querySelectorAll('.toggle-comment').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const span = btn.previousElementSibling;
+        const full = span.dataset.full || '';
+        const expanded = btn.getAttribute('data-expanded') === '1';
+        if (!expanded){
+          span.textContent = full;
+          btn.textContent = 'ver menos';
+          btn.setAttribute('data-expanded','1');
+        } else {
+          span.textContent = full.length > 160 ? (full.slice(0,157) + '...') : full;
+          btn.textContent = 'ver más';
+          btn.setAttribute('data-expanded','0');
+        }
+      });
+    });
+  }
+  wireToggleComments(document);
+
+  // Copiar fecha
+  $$('.copy-date').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const timeEl = btn.parentElement.querySelector('time');
+      const s = timeEl?.textContent?.trim() || '';
+      if (!s) return;
+      navigator.clipboard.writeText(s).then(()=> {
+        btn.textContent = 'copiado';
+        setTimeout(()=> btn.textContent='copiar', 1200);
+      });
+    });
+  });
+
+  // ===== Pager =====
+  const pager = document.getElementById('pager');
+  pager?.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button[data-page]');
+    if (!btn) return;
+    const totalPages = Math.max(1, Math.ceil(currentView.length / pageSize));
+    const dir = btn.dataset.page;
+    if (dir === 'prev' && currentPage > 1) currentPage--;
+    if (dir === 'next' && currentPage < totalPages) currentPage++;
+    paginate(currentView);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+
+  // Estado inicial
+  applyFilters();
+  wireToggleComments(document);
+
+  // ===== SaniBot (tour + tips) =====
+  const anchors = {
+    resumen: ()=> document.getElementById('summaryBox'),
+    filtros: ()=> document.getElementById('filtersBox'),
+    lista:   ()=> document.getElementById('reviewsList'),
+  };
+  const steps = [
+    { key:'resumen', title:'Resumen general', html:`<p>Promedio, total y distribución de estrellas. Útil para ver tu <strong>reputación</strong> de un vistazo.</p>` },
+    { key:'filtros', title:'Filtra y ordena', html:`<p>Filtra por estrellas, ordena por fecha o rating y busca por nombre de paciente.</p>` },
+    { key:'lista',   title:'Lista de evaluaciones', html:`<p>Abre cada evaluación, expande el comentario y copia la fecha si necesitas llevar registro.</p>` },
+  ];
+
+  const modal  = document.getElementById('sanibotReviewsModal');
+  const titleE = document.getElementById('sanibotReviewsTitle');
+  const bodyE  = document.getElementById('sanibotReviewsBody');
+  const nextB  = document.getElementById('sanibotReviewsNext');
+  const closeB = document.getElementById('sanibotReviewsClose');
+  const HCLASS = 'ring-highlight';
+  let idx = 0;
+
+  function openModal(){ modal.classList.remove('sanibot-modal'); document.body.classList.add('overflow-hidden'); }
+  function closeModal(){ modal.classList.add('sanibot-modal'); document.body.classList.remove('overflow-hidden'); clearHL(); }
+  function clearHL(){ document.querySelectorAll('.'+HCLASS).forEach(el=>el.classList.remove(HCLASS)); }
+  function renderStep(step){
+    clearHL();
+    titleE.textContent = step.title + ' — SaniBot';
+    bodyE.innerHTML = step.html;
+    const target = anchors[step.key]?.();
+    if (target){ target.classList.add(HCLASS); target.scrollIntoView({behavior:'smooth', block:'center'}); }
+  }
+  function startTour(){ idx=0; openModal(); renderStep(steps[idx]); nextB.textContent='Siguiente'; }
+
+  document.getElementById('btnTourReviews')?.addEventListener('click', startTour);
+  document.getElementById('btnTipsReviews')?.addEventListener('click', ()=>{
+    openModal();
+    titleE.textContent = 'Tips para subir tu rating — SaniBot';
+    bodyE.innerHTML = `
+      <ul class="list-disc list-inside space-y-2">
+        <li>Responde rápido a las solicitudes (ideal &lt; 2 horas).</li>
+        <li>Define expectativas claras en la descripción del servicio.</li>
+        <li>Finaliza el servicio dentro de la plataforma para habilitar la reseña.</li>
+        <li>Pide amablemente a tus pacientes que evalúen al cerrar.</li>
+        <li>Usa un tono empático y claro en tus mensajes.</li>
+      </ul>`;
+    nextB.textContent = 'Entendido';
+  });
+  nextB?.addEventListener('click', ()=>{
+    if (nextB.textContent === 'Siguiente'){
+      idx++; (idx < steps.length) ? renderStep(steps[idx]) : closeModal();
+      if (idx === steps.length - 1) nextB.textContent = 'Finalizar';
+    } else { closeModal(); }
+  });
+  closeB?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e)=> { if (e.target === modal) closeModal(); });
+})();
+</script>

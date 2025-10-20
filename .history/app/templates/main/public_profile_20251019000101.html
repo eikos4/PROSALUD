@@ -1,0 +1,94 @@
+{% if user.services and user.role == 'professional' %}
+<section id="servicios" class="py-10 bg-[#F5F7FA]">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-xl font-bold text-[#276EF1] mb-6 flex items-center gap-2">
+      <i class="fas fa-briefcase"></i> Servicios ofrecidos
+    </h2>
+    <div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+      {% for service in user.services %}
+      <div class="bg-white p-6 rounded-xl shadow-md border border-[#276EF1]/10 flex flex-col gap-2 hover:shadow-xl transition group">
+        <span class="font-bold text-base text-[#164399] mb-1 group-hover:text-[#276EF1]">{{ service.title }}</span>
+        <span class="text-gray-600 text-sm mb-2">{{ service.description }}</span>
+        <span class="text-[#276EF1] font-bold mt-2">${{ '{:,.0f}'.format(service.price) }} CLP</span>
+        <div class="flex gap-2 mt-auto">
+          <a href="{{ url_for('client.request_service', service_id=service.id) }}"
+             class="px-4 py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-lg text-sm font-bold shadow transition text-center flex items-center gap-2"
+             title="Solicitar este servicio">
+             <i class="fas fa-handshake"></i> Solicitar
+          </a>
+          <a href="{{ url_for('messages.chat', other_id=user.id, service_id=service.id) }}"
+             class="px-4 py-2 bg-[#276EF1] hover:bg-[#164399] text-white rounded-lg text-sm font-bold shadow transition text-center flex items-center gap-2"
+             title="Chatear sobre este servicio">
+            <i class="fas fa-comment-dots"></i> Chat
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- 🕒 HORARIO DE ATENCIÓN -->
+{% if user.schedule %}
+<section class="bg-white py-10">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-xl font-bold text-[#276EF1] mb-6 flex items-center gap-2">
+      <i class="fas fa-clock"></i> Horario de atención
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {% for day, hours in user.schedule.items() %}
+      <div class="bg-[#F5F7FA] rounded-xl shadow-sm p-4 flex justify-between items-center">
+        <span class="font-semibold text-[#164399]">{{ day|capitalize }}</span>
+        <span class="text-gray-700">{{ hours }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% if not user.schedule %}
+    <p class="text-gray-500 italic mt-4">Este profesional aún no ha configurado su horario de atención.</p>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ⭐ RESEÑAS Y OPINIONES -->
+{% if user.reviews %}
+<section class="bg-[#F5F7FA] py-12">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-xl font-bold text-[#276EF1] mb-6 flex items-center gap-2">
+      <i class="fas fa-star"></i> Opiniones de pacientes
+    </h2>
+
+    <div class="space-y-6">
+      {% for review in user.reviews %}
+      <div class="bg-white p-6 rounded-2xl shadow-md border border-[#276EF1]/10 hover:shadow-lg transition">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#276EF1]/20 flex items-center justify-center text-[#276EF1] font-bold">
+              {{ review.author[0]|upper }}
+            </div>
+            <div>
+              <span class="font-semibold text-[#0d3b66]">{{ review.author }}</span>
+              <p class="text-xs text-gray-500">{{ review.date.strftime('%d %b %Y') }}</p>
+            </div>
+          </div>
+          <div class="flex items-center text-yellow-400 text-sm">
+            {% for i in range(1,6) %}
+              <i class="fas fa-star{% if i > review.rating %}-o{% endif %}"></i>
+            {% endfor %}
+          </div>
+        </div>
+        <p class="text-gray-700 text-sm leading-relaxed">{{ review.comment }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% else %}
+<section class="bg-[#F5F7FA] py-10">
+  <div class="max-w-5xl mx-auto px-4 text-center text-gray-500 italic">
+    <i class="fas fa-comment-dots text-[#276EF1] mb-2 text-2xl"></i><br>
+    Este profesional aún no ha recibido reseñas.
+  </div>
+</section>
+{% endif %}

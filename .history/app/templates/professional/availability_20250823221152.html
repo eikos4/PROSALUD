@@ -1,0 +1,400 @@
+{% extends 'base.html' %}
+{% block title %}Mi disponibilidad – IndepSalud{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-10 px-2 animate-fade-in">
+
+  <!-- Header -->
+  <div class="flex items-center gap-4 mb-6">
+    <div class="bg-[#276EF1]/10 rounded-full p-3 shadow">
+      <i class="fas fa-calendar-alt text-2xl text-[#276EF1]"></i>
+    </div>
+    <h2 class="text-3xl font-black text-[#276EF1] tracking-tight drop-shadow">Mi Disponibilidad</h2>
+  </div>
+
+  <!-- SaniBot -->
+  <div class="bg-white rounded-2xl border border-indigo-100 shadow p-5 mb-6 flex items-start gap-4">
+    <img src="{{ url_for('static', filename='images/sanibot.png') }}" alt="SaniBot" class="w-12 h-12 rounded-full shadow">
+    <div class="flex-1">
+      <h3 class="text-lg font-bold text-[#0d3b66]">Hola, soy SaniBot 🤖</h3>
+      <p class="text-gray-600 mt-1">
+        Aquí configuras tus <strong>horarios disponibles</strong> para que los pacientes puedan agendar. ¿Quieres una guía rápida o tips?
+      </p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button id="btnTourDisp" type="button"
+          class="px-4 py-2 rounded-lg bg-[#276EF1] text-white font-semibold hover:bg-[#1E5BB8] shadow">
+          Guía rápida
+        </button>
+        <button id="btnTipsDisp" type="button"
+          class="px-4 py-2 rounded-lg bg-white text-[#276EF1] border border-[#276EF1]/40 font-semibold hover:bg-[#E6F2FF] shadow">
+          Tips de agenda
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mb-6">
+        {% for category, msg in messages %}
+          <div class="rounded-xl p-3 mb-2 text-center font-semibold shadow animate-fade-in
+              {% if category == 'success' %}bg-green-50 text-green-800 border-l-4 border-green-400
+              {% elif category == 'warning' %}bg-yellow-50 text-yellow-800 border-l-4 border-yellow-400
+              {% elif category == 'danger' %}bg-red-50 text-red-700 border-l-4 border-red-400
+              {% else %}bg-blue-50 text-blue-700 border-l-4 border-blue-400
+              {% endif %}">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Formulario principal -->
+  <div id="boxForm" class="bg-gradient-to-br from-[#f5faff] via-[#eaf2fc] to-[#f7fbff] rounded-3xl shadow-2xl border border-[#276EF1]/10 p-8 mb-12 animate-fade-in-up">
+    <form id="dispForm" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-7 items-end">
+      {{ form.hidden_tag() }}
+
+      <!-- Día de la semana -->
+      <div id="field-dia">
+        <label class="block text-[#276EF1] font-bold mb-1">Día</label>
+        <select name="{{ form.weekday.name }}" id="weekday"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1] transition" required>
+          <option value="">Selecciona día</option>
+          {% for value, label in form.weekday.choices %}
+            <option value="{{ value }}" {% if form.weekday.data == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <div class="flex items-center justify-between mt-1">
+          <small class="text-gray-500">Escoge un día.</small>
+          <button type="button" class="text-xs text-[#276EF1] underline sanibot-help" data-key="dia">¿Cuál día elegir?</button>
+        </div>
+        {% if form.weekday.errors %}
+          <span class="text-red-500 text-xs">{{ form.weekday.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Hora de inicio -->
+      <div id="field-inicio">
+        <label class="block text-[#276EF1] font-bold mb-1">Hora de inicio</label>
+        <input type="time" name="{{ form.start_time.name }}" id="start_time"
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1] transition"
+               value="{{ form.start_time.data if form.start_time.data else '' }}" required>
+        <div class="flex items-center justify-between mt-1">
+          <small class="text-gray-500">Formato 24h.</small>
+          <button type="button" class="text-xs text-[#276EF1] underline sanibot-help" data-key="inicio">¿Recomendaciones?</button>
+        </div>
+        {% if form.start_time.errors %}
+          <span class="text-red-500 text-xs">{{ form.start_time.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Hora de término -->
+      <div id="field-fin">
+        <label class="block text-[#276EF1] font-bold mb-1">Hora de término</label>
+        <input type="time" name="{{ form.end_time.name }}" id="end_time"
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#276EF1] transition"
+               value="{{ form.end_time.data if form.end_time.data else '' }}" required>
+        <div class="flex items-center justify-between mt-1">
+          <small class="text-gray-500">Debe ser mayor a inicio.</small>
+          <button type="button" class="text-xs text-[#276EF1] underline sanibot-help" data-key="fin">¿Cómo definir fin?</button>
+        </div>
+        {% if form.end_time.errors %}
+          <span class="text-red-500 text-xs">{{ form.end_time.errors[0] }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Acciones -->
+      <div class="flex flex-col gap-2">
+        <label class="invisible">Acciones</label>
+        {{ form.submit(class_="w-full px-6 py-2 bg-[#276EF1] hover:bg-[#1E5BB8] text-white rounded-xl font-extrabold shadow-lg transition text-base") }}
+        <button type="button" id="btnClear" class="w-full px-6 py-2 bg-white border border-gray-300 hover:bg-gray-100 text-[#276EF1] rounded-xl font-bold shadow transition text-base">
+          Limpiar
+        </button>
+      </div>
+    </form>
+      </div>
+    <!-- Rellenar semana -->
+   
+
+  <!-- Tabla de horarios -->
+  <div id="boxTabla" class="bg-white rounded-3xl shadow-xl p-10 border border-[#276EF1]/10 animate-fade-in-up">
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="text-xl font-bold text-[#276EF1] flex items-center gap-2">
+        <i class="fas fa-clock"></i> Días y horarios
+      </h4>
+      <button type="button" class="text-xs font-semibold text-[#276EF1] underline sanibot-help" data-key="tabla">¿Qué veo aquí?</button>
+    </div>
+
+    {% if disponibles %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 text-sm" id="tablaDisp">
+          <thead>
+            <tr class="bg-[#f5f7fc]">
+              <th class="px-5 py-3 text-left text-[#164399] font-bold tracking-wide">Día</th>
+              <th class="px-5 py-3 text-left text-[#164399] font-bold tracking-wide">Hora de inicio</th>
+              <th class="px-5 py-3 text-left text-[#164399] font-bold tracking-wide">Hora de término</th>
+              <th class="px-5 py-3 text-center text-[#164399] font-bold tracking-wide">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for slot in disponibles %}
+            <tr class="hover:bg-[#f7faff] transition">
+              <td class="px-5 py-3 font-semibold text-[#1E293B] whitespace-nowrap flex items-center gap-2">
+                <i class="far fa-calendar-check text-[#FF8800]"></i>
+                <span class="weekday-cell" data-day="{{ slot.weekday }}">{{ slot.weekday }}</span>
+              </td>
+              <td class="px-5 py-3 text-[#276EF1] whitespace-nowrap font-bold start-cell" data-time="{{ slot.start_time.strftime('%H:%M') }}">{{ slot.start_time.strftime('%H:%M') }}</td>
+              <td class="px-5 py-3 text-[#276EF1] whitespace-nowrap font-bold end-cell" data-time="{{ slot.end_time.strftime('%H:%M') }}">{{ slot.end_time.strftime('%H:%M') }}</td>
+              <td class="px-5 py-3 text-center">
+                <form action="{{ url_for('professional.delete_availability', id=slot.id) }}" method="POST" onsubmit="return confirm('¿Eliminar esta disponibilidad?');">
+                  {{ delete_form.csrf_token }}
+                  <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center gap-2 shadow font-bold text-xs transition" title="Eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                    <span class="hidden sm:inline">Eliminar</span>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-gray-400 text-center py-10 text-lg flex flex-col items-center animate-fade-in">
+        <i class="fas fa-info-circle text-3xl mb-3"></i>
+        No tienes disponibilidad agregada.
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Modal SaniBot -->
+<style>.sanibot-modal{display:none}</style>
+<div id="sanibotDispModal" class="sanibot-modal fixed inset-0 z-50 flex items-center justify-center">
+  <div class="absolute inset-0 bg-black/40"></div>
+  <div class="relative bg-white max-w-2xl w-[92%] rounded-2xl shadow-2xl overflow-hidden">
+    <div class="flex items-center gap-3 px-6 py-4 border-b">
+      <img src="{{ url_for('static', filename='images/sanibot.png') }}" class="w-10 h-10" alt="SaniBot">
+      <h3 id="sanibotDispTitle" class="text-lg font-bold text-[#0d3b66]">Guía — Mi disponibilidad</h3>
+    </div>
+    <div id="sanibotDispBody" class="p-6 space-y-4 text-sm text-gray-700">
+      <!-- dinámico -->
+    </div>
+    <div class="px-6 py-4 border-t bg-gray-50 flex justify-end gap-2">
+      <button id="sanibotDispClose" type="button" class="px-4 py-2 rounded-lg border hover:bg-gray-100">Cerrar</button>
+      <button id="sanibotDispNext" type="button" class="px-4 py-2 rounded-lg bg-[#276EF1] text-white hover:bg-[#1E5BB8]">Siguiente</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fade-in {0%{opacity:0;}100%{opacity:1;}}
+  .animate-fade-in {animation: fade-in 1.2s cubic-bezier(.6,0,.4,1);}
+  @keyframes fade-in-up {0%{opacity:0;transform:translateY(35px);}100%{opacity:1;transform:none;}}
+  .animate-fade-in-up {animation: fade-in-up 1s cubic-bezier(.6,0,.4,1);}
+  .ring-highlight { box-shadow: 0 0 0 4px rgba(39,110,241,.35); border-radius: 1rem; transition: box-shadow .25s ease; }
+</style>
+
+<script>
+(function(){
+  // ===== Datos existentes para validar solapes =====
+  const existing = [];
+  document.querySelectorAll('#tablaDisp tbody tr').forEach(tr => {
+    const day = tr.querySelector('.weekday-cell')?.dataset.day;
+    const start = tr.querySelector('.start-cell')?.dataset.time;
+    const end = tr.querySelector('.end-cell')?.dataset.time;
+    if (day && start && end) existing.push({ day, start, end });
+  });
+
+  // Helpers tiempo HH:MM -> minutos
+  const toMin = (hhmm) => {
+    if (!hhmm || !/^\d{2}:\d{2}$/.test(hhmm)) return NaN;
+    const [h, m] = hhmm.split(':').map(Number);
+    return h*60 + m;
+  };
+  const overlap = (aStart, aEnd, bStart, bEnd) => Math.max(aStart,bStart) < Math.min(aEnd,bEnd);
+
+  // ===== UI refs =====
+  const form = document.getElementById('dispForm');
+  const weekday = document.getElementById('weekday');
+  const startEl = document.getElementById('start_time');
+  const endEl   = document.getElementById('end_time');
+  const btnClear= document.getElementById('btnClear');
+
+  // ===== Validación cliente =====
+  function validateClient(e){
+    const day = weekday.value;
+    const s = toMin(startEl.value);
+    const f = toMin(endEl.value);
+
+    if (!day || isNaN(s) || isNaN(f)) return true;
+
+    // fin > inicio
+    if (f <= s){
+      e?.preventDefault();
+      alert('La hora de término debe ser mayor que la de inicio.');
+      endEl.focus();
+      return false;
+    }
+
+    // solape con existentes (mismo día)
+    const clash = existing.some(row => {
+      if (row.day !== day) return false;
+      const rs = toMin(row.start), rf = toMin(row.end);
+      return overlap(s, f, rs, rf);
+    });
+    if (clash){
+      e?.preventDefault();
+      alert('El rango se superpone con uno existente para ese día. Ajusta horarios.');
+      return false;
+    }
+    return true;
+  }
+  form?.addEventListener('submit', validateClient);
+
+  // Limpiar
+  btnClear?.addEventListener('click', ()=>{
+    weekday.value = '';
+    startEl.value = '';
+    endEl.value   = '';
+    weekday.focus();
+  });
+
+  // ===== Rellenar semana con el rango actual (POST por fetch) =====
+  const btnFillWeek = document.getElementById('btnFillWeek');
+  const dayChecks   = Array.from(document.querySelectorAll('.day-multi'));
+  const fillResult  = document.getElementById('fillResult');
+
+  // Extraer CSRF desde el hidden_tag()
+  function getCsrf(){
+    const input = form.querySelector('input[name="csrf_token"]');
+    return input ? input.value : null;
+  }
+
+  async function postSlot(day, start, end){
+    const body = new URLSearchParams();
+    body.set('{{ form.weekday.name }}', day);
+    body.set('{{ form.start_time.name }}', start);
+    body.set('{{ form.end_time.name }}', end);
+    body.set('csrf_token', getCsrf() || '');
+    // Mismo endpoint del form:
+    const res = await fetch(form.getAttribute('action') || window.location.href, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body
+    });
+    return res.ok;
+  }
+
+  btnFillWeek?.addEventListener('click', async ()=>{
+    const start = startEl.value;
+    const end   = endEl.value;
+    if (!start || !end){
+      alert('Define primero hora de inicio y término.');
+      return;
+    }
+    // Validación local de fin > inicio
+    if (!validateClient()){
+      return;
+    }
+
+    const days = dayChecks.filter(c => c.checked).map(c => c.value);
+    if (!days.length){
+      alert('Selecciona al menos un día para rellenar.');
+      return;
+    }
+
+    fillResult.textContent = 'Aplicando...';
+
+    let ok = 0, fail = 0;
+    for (const d of days){
+      // Evitar solape con tabla local (mejora UX; backend igual debe validar)
+      const s = toMin(start), f = toMin(end);
+      const clash = existing.some(row => row.day === d && overlap(s,f,toMin(row.start),toMin(row.end)));
+      if (clash){
+        fail++; continue;
+      }
+      try{
+        const done = await postSlot(d, start, end);
+        done ? ok++ : fail++;
+      }catch{ fail++; }
+    }
+    fillResult.textContent = `Hecho: ${ok} ✓  |  Fallidos: ${fail} ✕  (recarga para ver cambios)`;
+  });
+
+  // ===== SaniBot (tour + tips + ayudas) =====
+  const anchors = {
+    dia:    ()=> document.getElementById('field-dia'),
+    inicio: ()=> document.getElementById('field-inicio'),
+    fin:    ()=> document.getElementById('field-fin'),
+    semana: ()=> document.getElementById('boxForm'),
+    tabla:  ()=> document.getElementById('boxTabla'),
+  };
+  const steps = [
+    { key:'dia', title:'Selecciona el día', html:`<p>Elige el día para el que deseas habilitar un rango horario.</p><ul class="list-disc list-inside"><li>Puedes usar <em>Rellenar semana</em> para replicar este rango a varios días.</li></ul>` },
+    { key:'inicio', title:'Hora de inicio', html:`<p>Te sugerimos iniciar en bloques redondos (ej. 09:00, 09:30).</p><ul class="list-disc list-inside"><li>Evita traslapar rangos en un mismo día.</li></ul>` },
+    { key:'fin', title:'Hora de término', html:`<p>Debe ser mayor a la hora de inicio.</p><ul class="list-disc list-inside"><li>Considera la <strong>duración típica</strong> de tu servicio (ej. 30 o 45 min).</li></ul>` },
+    { key:'semana', title:'Rellenar semana', html:`<p>Marca los días y aplica este mismo rango a todos con un click.</p><ul class="list-disc list-inside"><li>Usa el mismo endpoint del formulario y respeta tu CSRF.</li></ul>` },
+    { key:'tabla', title:'Días y horarios', html:`<p>Resumen de tus disponibilidades. Desde aquí puedes eliminar un rango.</p><ul class="list-disc list-inside"><li>Si usas agenda externa, mantén sincronizados tus horarios.</li></ul>` },
+  ];
+
+  const modal  = document.getElementById('sanibotDispModal');
+  const titleE = document.getElementById('sanibotDispTitle');
+  const bodyE  = document.getElementById('sanibotDispBody');
+  const nextB  = document.getElementById('sanibotDispNext');
+  const closeB = document.getElementById('sanibotDispClose');
+  const HCLASS = 'ring-highlight';
+  let idx = 0;
+
+  function openModal(){ modal.classList.remove('sanibot-modal'); document.body.classList.add('overflow-hidden'); }
+  function closeModal(){ modal.classList.add('sanibot-modal'); document.body.classList.remove('overflow-hidden'); clearHL(); }
+  function clearHL(){ document.querySelectorAll('.'+HCLASS).forEach(el=>el.classList.remove(HCLASS)); }
+  function renderStep(step){
+    clearHL();
+    titleE.textContent = step.title + ' — SaniBot';
+    bodyE.innerHTML = step.html;
+    const target = anchors[step.key]?.();
+    if (target){ target.classList.add(HCLASS); target.scrollIntoView({behavior:'smooth', block:'center'}); }
+  }
+  function startTour(){ idx=0; openModal(); renderStep(steps[idx]); nextB.textContent='Siguiente'; }
+
+  document.getElementById('btnTourDisp')?.addEventListener('click', startTour);
+  document.getElementById('btnTipsDisp')?.addEventListener('click', ()=>{
+    openModal();
+    titleE.textContent = 'Tips de agenda — SaniBot';
+    bodyE.innerHTML = `
+      <ul class="list-disc list-inside space-y-2">
+        <li>Evita solapamientos; usa bloques de 30 o 45 minutos.</li>
+        <li>Si atiendes presencial, deja colchón para traslados.</li>
+        <li>Actualiza horarios cada semana si tu disponibilidad cambia.</li>
+        <li>Si pausas tu agenda, elimina o ajusta rangos para no recibir solicitudes fuera de horario.</li>
+      </ul>`;
+    nextB.textContent = 'Entendido';
+  });
+
+  // Ayudas contextuales
+  document.querySelectorAll('.sanibot-help').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const key = btn.getAttribute('data-key');
+      const step = steps.find(s=>s.key===key);
+      if (!step) return;
+      openModal(); renderStep(step); nextB.textContent = 'Entendido';
+    });
+  });
+
+  // Navegación modal
+  nextB?.addEventListener('click', ()=>{
+    if (nextB.textContent === 'Siguiente'){
+      idx++; (idx < steps.length) ? renderStep(steps[idx]) : closeModal();
+      if (idx === steps.length - 1) nextB.textContent = 'Finalizar';
+    } else { closeModal(); }
+  });
+  closeB?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e)=> { if (e.target === modal) closeModal(); });
+
+})();
+</script>
+
+{% endblock %}

@@ -63,12 +63,12 @@
     <form method="POST" class="space-y-7" autocomplete="off">
       {{ form.hidden_tag() }}
 
-      <!-- Nombre -->
+      <!-- Nombre completo -->
       <div>
-        {{ form.name.label(class_="block text-[#164399] font-bold mb-1") }}
-        {{ form.name(class_="w-full px-4 py-3 bg-gray-100 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]" ~ (' border-red-400' if form.name.errors else ''), placeholder='Ej: Juan Pérez') }}
-        {% if form.name.errors %}
-          <div class="text-red-500 text-sm mt-1">{{ form.name.errors[0] }}</div>
+        {{ form.username.label(class_="block text-[#164399] font-bold mb-1") }}
+        {{ form.username(class_="w-full px-4 py-3 bg-gray-100 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]" ~ (' border-red-400' if form.username.errors else ''), placeholder='Ej: Juan Pérez') }}
+        {% if form.username.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.username.errors[0] }}</div>
         {% endif %}
       </div>
 
@@ -81,20 +81,26 @@
         {% endif %}
       </div>
 
-      <!-- Password -->
+      <!-- Teléfono -->
       <div>
-        {{ form.password.label(class_="block text-[#164399] font-bold mb-1") }}
-        {{ form.password(class_="w-full px-4 py-3 bg-gray-100 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]" ~ (' border-red-400' if form.password.errors else ''), placeholder='Contraseña', autocomplete='new-password') }}
-        <small class="text-gray-500">Déjalo en blanco para no cambiar la contraseña</small>
-        {% if form.password.errors %}
-          <div class="text-red-500 text-sm mt-1">{{ form.password.errors[0] }}</div>
+        {{ form.phone.label(class_="block text-[#164399] font-bold mb-1") }}
+        {{ form.phone(class_="w-full px-4 py-3 bg-gray-100 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]" ~ (' border-red-400' if form.phone.errors else ''), placeholder='+56 9 1234 5678') }}
+        {% if form.phone.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.phone.errors[0] }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Ubicación -->
+      <div>
+        {{ form.location.label(class_="block text-[#164399] font-bold mb-1") }}
+        {{ form.location(class_="w-full px-4 py-3 bg-gray-100 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#276EF1]" ~ (' border-red-400' if form.location.errors else ''), placeholder='Ej: Santiago, RM') }}
+        {% if form.location.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.location.errors[0] }}</div>
         {% endif %}
       </div>
 
       <!-- Botón submit -->
-      <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#276EF1] to-[#FF8800] hover:from-[#1E5BB8] hover:to-[#CC7700] text-white rounded-lg font-bold text-lg shadow transition">
-        <i class="fas fa-save mr-2"></i> Guardar cambios
-      </button>
+      {{ form.submit(class_="w-full py-3 bg-gradient-to-r from-[#276EF1] to-[#FF8800] hover:from-[#1E5BB8] hover:to-[#CC7700] text-white rounded-lg font-bold text-lg shadow transition") }}
     </form>
   </div>
 </div>

@@ -9,10 +9,10 @@
     <div class="bg-white/80 rounded-3xl shadow-2xl border border-[#276EF1]/10 p-7 animate-fade-in flex flex-col md:flex-row items-center gap-7">
       <div class="relative group flex-shrink-0">
         <div class="w-24 h-24 rounded-full bg-gray-200 border-4 border-[#276EF1]/20 shadow-xl overflow-hidden flex items-center justify-center">
-          <img id="avatar-preview"
-            src="{{ current_user.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
-            class="object-cover w-full h-full transition group-hover:scale-105"
-            alt="Foto de perfil actual">
+          <img id="avatar-preview2"
+              src="{{ url_for('professional.uploaded_file', filename=current_user.profile_image) if current_user.profile_image else url_for('static', filename='images/placeholder.png') }}"
+              class="object-cover w-full h-full transition group-hover:scale-105"
+              alt="Foto de perfil actual">
         </div>
         <a href="{{ url_for('main.public_profile', id=current_user.id) }}" target="_blank"
           class="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-[#276EF1] text-white rounded-xl shadow text-xs font-semibold hover:bg-[#164399] transition">
@@ -53,9 +53,10 @@
         <div class="relative group mb-4">
           <div class="w-32 h-32 rounded-full bg-gray-200 border-4 border-[#FF8800]/30 shadow-xl overflow-hidden flex items-center justify-center">
             <img id="avatar-preview2"
-              src="{{ current_user.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+              src="{{ url_for('professional.uploaded_file', filename=current_user.profile_image) if current_user.profile_image else url_for('static', filename='images/placeholder.png') }}"
               class="object-cover w-full h-full transition group-hover:scale-105"
               alt="Foto de perfil actual">
+
           </div>
           <label for="profile_image" class="absolute bottom-2 right-2 bg-[#276EF1] hover:bg-[#164399] text-white rounded-full p-2 cursor-pointer shadow transition flex items-center" title="Cambiar foto de perfil">
             <i class="fas fa-camera"></i>

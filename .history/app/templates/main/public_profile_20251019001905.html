@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% block title %}Perfil de {{ user.full_name or user.username }} – PROSALUD{% endblock %}
+
+{% block content %}
+<!-- 🧠 CABECERA HERO PROFESIONAL -->
+<section class="relative w-full min-h-[360px] flex items-end overflow-hidden">
+  <!-- Fondo con gradiente y blur -->
+  <div class="absolute inset-0">
+    <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-60">
+      <source src="{{ url_for('static', filename='videos/fondo_salud.mp4') }}" type="video/mp4">
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-br from-[#276EF1]/80 via-[#e6eefa]/70 to-[#FF8800]/30 backdrop-blur-sm"></div>
+  </div>
+
+  <!-- Info profesional -->
+  <div class="relative z-10 max-w-5xl mx-auto w-full flex flex-col sm:flex-row items-center sm:items-end px-4 py-8 gap-8">
+    <img src="{{ user.profile_image_url or url_for('static', filename='images/placeholder.png') }}"
+         class="w-36 h-36 sm:w-44 sm:h-44 rounded-full border-4 border-white shadow-2xl bg-white object-cover" alt="Avatar" />
+
+    <div class="flex-1 text-center sm:text-left">
+      <h1 class="text-3xl sm:text-4xl font-black text-white flex flex-wrap gap-2 items-center justify-center sm:justify-start mb-2 drop-shadow">
+        {{ user.full_name or user.username }}
+        {% if user.verified %}
+          <span class="text-green-400" title="Cuenta verificada"><i class="fas fa-check-circle"></i></span>
+        {% endif %}
+      </h1>
+
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2 justify-center sm:justify-start mb-3">
+        {% if user.category %}<span class="px-3 py-1 bg-[#276EF1]/30 text-white rounded-full text-xs font-bold"><i class="fas fa-briefcase mr-1"></i>{{ user.category|capitalize }}</span>{% endif %}
+        {% if user.location %}<span class="px-3 py-1 bg-white/40 text-[#FF8800] rounded-full text-xs font-bold"><i class="fas fa-map-marker-alt mr-1"></i>{{ user.location }}</span>{% endif %}
+        {% if user.subcategory %}<span class="px-3 py-1 bg-[#FF8800]/10 text-[#FF8800] rounded-full text-xs font-bold"><i class="fas fa-star mr-1"></i>{{ user.subcategory }}</span>{% endif %}
+      </div>
+
+      <!-- Datos -->
+      <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
+        {% if user.registration_date %}
+        <span class="bg-white/40 text-[#276EF1] px-3 py-1 rounded-full text-xs">Miembro desde {{ user.registration_date.strftime('%b %Y') }}</span>
+        {% endif %}
+        {% if user.last_login %}
+        <span class="bg-white/40 text-[#FF8800] px-3 py-1 rounded-full text-xs">Último acceso: {{ user.last_login.strftime('%d-%m-%Y') }}</span>
+        {% endif %}
+        {% if user.rating %}
+        <span class="bg-yellow-200/80 text-yellow-700 px-3 py-1 rounded-full text-xs flex items-center gap-1"><i class="fas fa-star"></i> {{ '%.1f'|format(user.rating) }}/5.0</span>
+        {% endif %}
+      </div>
+
+      <!-- Botones -->
+      <div class="flex flex-wrap gap-4 justify-center sm:justify-start mt-4">
+        {% if user.website %}
+        <a href="{{ user.website }}" target="_blank"
+           class="px-6 py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-full font-semibold shadow flex items-center gap-2">
+          <i class="fas fa-globe"></i> Sitio Web
+        </a>
+        {% endif %}
+        {% if user.services %}
+        <a href="#servicios"
+           class="px-7 py-3 bg-gradient-to-r from-[#276EF1] to-[#FF8800] hover:from-[#1E5BB8] hover:to-[#CC7700] text-white rounded-full font-extrabold text-base shadow-lg transition">
+          <i class="fas fa-handshake mr-2"></i> Solicitar servicio
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 💎 SEPARADOR -->
+<div class="flex justify-center py-4">
+  <div class="h-1.5 w-28 rounded-full bg-gradient-to-r from-[#276EF1]/70 to-[#FF8800]/50"></div>
+</div>
+
+<!-- 💬 SOBRE MÍ + CONTACTO -->
+<section class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 py-10 px-4">
+  <div class="bg-white rounded-2xl shadow-lg p-7 md:col-span-2">
+    <h2 class="text-xl font-bold text-[#276EF1] mb-2"><i class="fas fa-info-circle mr-2"></i>Sobre mí</h2>
+    <p class="text-gray-700 text-base mb-4">{{ user.description or 'Sin descripción disponible.' }}</p>
+
+    {% if user.skills %}
+    <div class="flex flex-wrap gap-2 mt-4">
+      {% for skill in user.skills %}
+      <span class="px-3 py-1 bg-[#276EF1]/20 text-[#276EF1] rounded-full text-sm font-semibold shadow">{{ skill }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- CONTACTO -->
+  <div class="bg-gradient-to-br from-[#276EF1]/90 to-[#FF8800]/60 rounded-2xl shadow-lg p-7 text-white">
+    <h3 class="font-bold mb-2"><i class="fas fa-address-book mr-2"></i>Contacto</h3>
+    <ul class="space-y-2 text-base">
+      {% if user.email %}<li><i class="fas fa-envelope mr-2"></i>{{ user.email }}</li>{% endif %}
+      {% if user.phone %}<li><i class="fas fa-phone mr-2"></i>{{ user.phone }}</li>{% endif %}
+      {% if user.website %}<li><i class="fas fa-globe mr-2"></i><a href="{{ user.website }}" class="underline hover:text-[#164399]" target="_blank">{{ user.website }}</a></li>{% endif %}
+    </ul>
+    {% if not (user.email or user.phone or user.website) %}
+    <p class="text-white/70 mt-4">No hay información de contacto pública para este profesional.</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- 🎓 EXPERIENCIA -->
+{% if user.experience_entries %}
+<section class="bg-white py-10">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-xl font-bold text-[#276EF1] mb-5"><i class="fas fa-graduation-cap mr-2"></i>Experiencia y educación</h2>
+    <ol class="relative border-l-4 border-[#276EF1]/30 space-y-10 ml-3">
+      {% for entry in user.experience_entries %}
+      <li>
+        <div class="absolute -left-5 top-2 w-4 h-4 rounded-full bg-[#276EF1] border-2 border-white"></div>
+        <div class="ml-5">
+          <h3 class="text-lg font-bold text-[#164399] mb-1">{{ entry.title }}</h3>
+          <div class="text-gray-500 text-xs mb-2">{{ entry.institution }} | {{ entry.period }}</div>
+          <p class="text-gray-700 text-sm">{{ entry.details }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endif %}
+
+<!-- 🕒 HORARIO -->
+{% if user.schedule %}
+<section class="bg-[#F5F7FA] py-10">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-xl font-bold text-[#276EF1] mb-6"><i class="fas fa-clock mr-2"></i>Horario de atención</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      {% for day, hours in user.schedule.items() %}
+      <div class="bg-white rounded-xl shadow-sm p-4 text-center border border-[#276EF1]/10">
+        <span class="block font-semibold text-[#164399]">{{ day|capitalize }}</span>
+        <span class="block text-gray-700 text-sm">{{ hours }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- 💼 SERVICIOS -->
+{% if user.services and user.role == 'professional' %}
+<section id="servicios" class="py-12 bg-white">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-xl font-bold text-[#276EF1] mb-6"><i class="fas fa-briefcase mr-2"></i>Servicios ofrecidos</h2>
+    <div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+      {% for service in user.services %}
+      <div class="bg-[#F5F7FA] p-6 rounded-xl shadow-md border border-[#276EF1]/10 flex flex-col hover:shadow-xl transition group">
+        <span class="font-bold text-base text-[#164399] group-hover:text-[#276EF1] mb-1">{{ service.title }}</span>
+        <p class="text-gray-600 text-sm mb-3">{{ service.description }}</p>
+        <span class="text-[#276EF1] font-bold mb-3">${{ '{:,.0f}'.format(service.price) }} CLP</span>
+        <div class="flex gap-2 mt-auto">
+          <a href="{{ url_for('client.request_service', service_id=service.id) }}"
+             class="px-4 py-2 bg-[#FF8800] hover:bg-[#CC7700] text-white rounded-lg text-sm font-bold flex items-center gap-2 transition"><i class="fas fa-handshake"></i> Solicitar</a>
+          <a href="{{ url_for('messages.chat', other_id=user.id, service_id=service.id) }}"
+             class="px-4 py-2 bg-[#276EF1] hover:bg-[#164399] text-white rounded-lg text-sm font-bold flex items-center gap-2 transition"><i class="fas fa-comment-dots"></i> Chat</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!
+<section class="bg-[#F5F7FA] py-12">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-xl font-bold text-[#276EF1] mb-6 flex items-center gap-2">
+      <i class="fas fa-star"></i> Opiniones de pacientes
+    </h2>
+
+    {% if reviews %}
+      <div class="space-y-6">
+        {% for review in reviews %}
+        <div class="bg-white p-6 rounded-xl shadow border border-[#276EF1]/10 hover:shadow-lg transition">
+          <div class="flex justify-between items-center mb-2">
+            <div>
+              <p class="font-semibold text-[#0d3b66]">{{ review.client.username or review.client.full_name }}</p>
+              <p class="text-xs text-gray-500">{{ review.created_at.strftime('%d %b %Y') }}</p>
+            </div>
+            <div class="text-yellow-400">
+              {% for i in range(1,6) %}
+                <i class="fas fa-star{% if i > review.rating %}-o{% endif %}"></i>
+              {% endfor %}
+            </div>
+          </div>
+          <p class="text-gray-700 text-sm">{{ review.comment }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-500 italic">Aún no hay reseñas para este profesional.</p>
+    {% endif %}
+
+    {% if current_user.is_authenticated and current_user.role == 'client' %}
+    <div class="mt-10 bg-white p-6 rounded-xl shadow">
+      <h3 class="text-lg font-semibold text-[#276EF1] mb-4"><i class="fas fa-pen mr-2"></i>Deja tu reseña</h3>
+      <form method="POST" action="{{ url_for('client.add_review', user_id=user.id) }}" class="space-y-4">
+        <div class="flex gap-1 text-yellow-400">
+          {% for i in range(1,6) %}
+          <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" class="hidden peer">
+          <label for="star{{ i }}" class="cursor-pointer text-2xl peer-checked:text-yellow-500 hover:text-yellow-300"><i class="fas fa-star"></i></label>
+          {% endfor %}
+        </div>
+        <textarea name="comment" rows="4" placeholder="Escribe tu opinión..." required
+                  class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#276EF1] text-gray-800"></textarea>
+        <button type="submit" class="px-6 py-2 bg-[#276EF1] hover:bg-[#164399] text-white font-semibold rounded-lg shadow">
+          <i class="fas fa-paper-plane mr-2"></i>Enviar reseña
+        </button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+@keyframes fade-in { 0%{opacity:0;transform:translateY(40px);}100%{opacity:1;transform:none;} }
+.animate-fade-in { animation: fade-in 1.1s cubic-bezier(.6,0,.4,1) forwards; }
+</style>
+{% endblock %}

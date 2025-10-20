@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Registrarse – IndepSALUD{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E8F4FF] via-[#F0FBFF] to-[#DDF5FF] py-10 relative overflow-hidden">
+  <!-- Fondos decorativos -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[50vw] h-[50vw] bg-[#00C2FF]/10 rounded-full blur-2xl z-0"></div>
+  <div class="absolute bottom-0 right-0 w-[30vw] h-[30vw] bg-[#007BFF]/10 rounded-full blur-2xl z-0"></div>
+
+  <div class="w-full max-w-2xl mx-auto relative z-10">
+
+    <!-- Título -->
+    <div class="mb-6 text-center">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-[#0d3b66] mb-2">Únete a </h1>
+      <p class="text-[#4C5B6B] text-lg">¿Cómo deseas usar la plataforma? <br>
+        <span class="text-[#007BFF] font-semibold">Solicitar atención médica</span> o <span class="text-[#00C2FF] font-semibold">Ofrecer servicios de salud</span>
+      </p>
+    </div>
+
+    <!-- Tipo de cuenta -->
+    <div class="mb-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Paciente -->
+      <div id="select-cliente" tabindex="0"
+        class="cursor-pointer group bg-white/80 hover:bg-[#E6F2FF] border-2 border-transparent hover:border-[#007BFF] rounded-2xl p-7 shadow-xl transition
+              flex flex-col items-center ring-0 focus:outline-none select-none relative"
+        onclick="selectRole('client')" onkeydown="if(event.key==='Enter'){selectRole('client')}"
+        aria-label="Paciente"
+      >
+        <div class="w-16 h-16 flex items-center justify-center rounded-full bg-[#007BFF]/20 mb-3 shadow group-hover:scale-105 transition-transform">
+          <i class="fas fa-user-injured text-[#007BFF] text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-[#007BFF] mb-1">Soy Paciente</h3>
+        <p class="text-[#0d3b66] text-base mb-2 italic">Busca atención profesional cuando lo necesites</p>
+        <ul class="text-gray-600 text-sm mb-2 space-y-1">
+          <li>✓ Accede a médicos y especialistas</li>
+          <li>✓ Agenda fácilmente desde tu casa</li>
+          <li>✓ Comunicación segura y directa</li>
+        </ul>
+        <span class="absolute top-3 right-5 hidden group-[.selected]:inline-block bg-[#007BFF] text-white text-xs font-semibold px-2 py-0.5 rounded">Seleccionado</span>
+      </div>
+
+      <!-- Profesional -->
+      <div id="select-profesional" tabindex="0"
+        class="cursor-pointer group bg-white/80 hover:bg-[#DFF9FD] border-2 border-transparent hover:border-[#00C2FF] rounded-2xl p-7 shadow-xl transition
+              flex flex-col items-center ring-0 focus:outline-none select-none relative"
+        onclick="selectRole('professional')" onkeydown="if(event.key==='Enter'){selectRole('professional')}"
+        aria-label="Profesional de la salud"
+      >
+        <div class="w-16 h-16 flex items-center justify-center rounded-full bg-[#00C2FF]/20 mb-3 shadow group-hover:scale-105 transition-transform">
+          <i class="fas fa-user-md text-[#00C2FF] text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-[#00C2FF] mb-1">Soy Profesional</h3>
+        <p class="text-[#0d3b66] text-base mb-2 italic">Conecta con pacientes y crece como especialista</p>
+        <ul class="text-gray-600 text-sm mb-2 space-y-1">
+          <li>✓ Publica tu perfil y especialidad</li>
+          <li>✓ Atiende consultas online o presenciales</li>
+          <li>✓ Sistema confiable de pagos y reputación</li>
+        </ul>
+        <span class="absolute top-3 right-5 hidden group-[.selected]:inline-block bg-[#00C2FF] text-white text-xs font-semibold px-2 py-0.5 rounded">Seleccionado</span>
+      </div>
+    </div>
+
+    <div class="mb-7 text-center text-xs text-gray-500">
+      Puedes cambiar esta elección más adelante si lo necesitas. 😊
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="relative bg-white/95 p-10 rounded-2xl shadow-2xl backdrop-blur-lg border border-[#F3F4F6]">
+      <h2 class="text-2xl font-bold text-center mb-5 text-[#0d3b66]">Crea tu cuenta gratis</h2>
+      <form method="POST" novalidate class="space-y-5" id="register-form">
+        {{ form.hidden_tag() }}
+        <div>
+          {{ form.username.label(class_='block text-[#0d3b66] mb-2 font-semibold') }}
+          {{ form.username(class_='w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#0d3b66] focus:ring-2 focus:ring-[#00C2FF]') }}
+        </div>
+        <div>
+          {{ form.email.label(class_='block text-[#0d3b66] mb-2 font-semibold') }}
+          {{ form.email(class_='w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#0d3b66] focus:ring-2 focus:ring-[#00C2FF]') }}
+        </div>
+        <div>
+          {{ form.password.label(class_='block text-[#0d3b66] mb-2 font-semibold') }}
+          {{ form.password(class_='w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#0d3b66] focus:ring-2 focus:ring-[#00C2FF]') }}
+        </div>
+        <div>
+          {{ form.password2.label(class_='block text-[#0d3b66] mb-2 font-semibold') }}
+          {{ form.password2(class_='w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#0d3b66] focus:ring-2 focus:ring-[#00C2FF]') }}
+        </div>
+        <div class="hidden">
+          {{ form.role.label }}
+          {{ form.role }}
+        </div>
+        <button type="submit"
+          class="w-full py-3 mt-2 bg-[#007BFF] hover:bg-[#005BB5] text-white rounded-lg font-semibold shadow transition text-lg hover:scale-[1.03] focus:scale-[.98] duration-100">
+          Crear mi cuenta
+        </button>
+      </form>
+      <p class="mt-8 text-center text-gray-600">
+        ¿Ya tienes cuenta? <a href="{{ url_for('auth.login') }}"
+          class="text-[#00C2FF] hover:text-[#0095B6] font-semibold transition">Inicia sesión aquí</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function selectRole(role) {
+    document.getElementById('select-cliente').classList.remove('border-[#007BFF]', 'ring-2', 'selected');
+    document.getElementById('select-profesional').classList.remove('border-[#00C2FF]', 'ring-2', 'selected');
+    if (role === 'client') {
+      document.getElementById('select-cliente').classList.add('border-[#007BFF]', 'ring-2', 'ring-[#007BFF]/20', 'selected');
+    } else if (role === 'professional') {
+      document.getElementById('select-profesional').classList.add('border-[#00C2FF]', 'ring-2', 'ring-[#00C2FF]/20', 'selected');
+    }
+    const roleField = document.querySelector('select[name="role"], input[name="role"]');
+    if (roleField) {
+      roleField.value = role;
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function () {
+    const roleField = document.querySelector('select[name="role"], input[name="role"]');
+    if (roleField && roleField.value) {
+      selectRole(roleField.value);
+    }
+  });
+</script>
+{% endblock %}
