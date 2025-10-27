@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Recuperar Cuenta – PROSALUD{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#f7fbff] via-[#e6f3ff] to-[#eaf2fc] px-6 py-12">
+  
+  <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-lg w-full text-center border border-[#276EF1]/10">
+    <img src="{{ url_for('static', filename='images/support.png') }}" alt="Soporte técnico" class="mx-auto mb-6 w-32 h-32 object-contain">
+    <h1 class="text-3xl font-bold text-[#276EF1] mb-4">¿Olvidaste tu contraseña?</h1>
+    <p class="text-gray-600 mb-8 text-lg leading-relaxed">
+      Por el momento la recuperación automática está deshabilitada.  
+      Si necesitas restablecer tu cuenta o actualizar tus credenciales, por favor
+      <span class="font-semibold text-[#276EF1]">contacta con nuestro equipo de soporte</span>.
+    </p>
+    
+    <a href="https://api.whatsapp.com/send/?phone=56920576206&text=Hola+Kodesk+%EF%BF%BD%2C+quiero+una+asesor%C3%ADa+para+mi+empresa.&type=phone_number&app_absent=0"
+       class="inline-block px-8 py-3 bg-[#276EF1] hover:bg-[#164399] text-white font-bold rounded-full shadow transition">
+      <i class="fas fa-envelope mr-2"></i> Contactar Soporte
+    </a>
+
+    <div class="mt-6">
+      <a href="{{ url_for('auth.login') }}" class="text-[#164399] hover:underline font-semibold text-sm">
+        ← Volver al inicio de sesión
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+@keyframes fade-in {0%{opacity:0;transform:translateY(30px);}100%{opacity:1;transform:none;}}
+.animate-fade-in {animation: fade-in 0.8s ease-in-out forwards;}
+</style>
+{% endblock %}

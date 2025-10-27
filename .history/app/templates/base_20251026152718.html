@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}PROSALUD{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favi.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="bg-[#f0f9ff] text-[#0d3b66]">
+
+  <!-- NAVBAR FIJO -->
+  <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-50 border-b border-[#e0e7ef]">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 h-16 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="{{ url_for('main.index') }}" class="flex items-center flex-shrink-0">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PROSALUD Logo" class="h-10 w-auto object-contain">
+      </a>
+
+      <!-- Navegación Desktop -->
+      <div class="hidden md:flex items-center gap-6">
+        {% if current_user.is_authenticated %}
+          {% if current_user.role == 'professional' %}
+            <a href="{{ url_for('professional.dashboard') }}" class="navlink">Inicio</a>
+            <a href="{{ url_for('professional.services') }}" class="navlink">Servicios</a>
+            <a href="{{ url_for('professional.requests_list') }}" class="navlink">Solicitudes</a>
+            <a href="{{ url_for('professional.availability') }}" class="navlink">Agenda</a>
+            <a href="{{ url_for('professional.reviews') }}" class="navlink">Reseñas</a>
+            <a href="{{ url_for('messages.inbox') }}" class="navlink">Mensajes</a>
+            <a href="{{ url_for('professional.profile') }}" class="navlink">Perfil</a>
+            <a href="{{ url_for('professional.history') }}" class="navlink">Historial</a>
+          {% elif current_user.role == 'client' %}
+            <a href="{{ url_for('client.dashboard') }}" class="navlink">Buscar</a>
+            <a href="{{ url_for('client.my_requests') }}" class="navlink">Mis Solicitudes</a>
+            <a href="{{ url_for('messages.inbox') }}" class="navlink">Mensajes</a>
+            <a href="{{ url_for('client.profile') }}" class="navlink">Mi Perfil</a>
+          {% endif %}
+        {% else %}
+          <a href="{{ url_for('main.index') }}" class="navlink">Inicio</a>
+          <a href="{{ url_for('') }}" class="navlink">Buscar Profesionales</a>
+          <a href="{{ url_for('main.public_professionals') }}" class="navlink">Explorar</a>
+          <a href="{{ url_for('main.contacto') }}" class="navlink">Contacto</a>
+        {% endif %}
+      </div>
+
+      <!-- Acciones usuario Desktop -->
+      <div class="hidden md:flex items-center gap-3">
+        {% if current_user.is_authenticated %}
+          <span class="text-sm text-gray-600 flex items-center gap-2">
+            <img
+              src="{{ url_for('professional.uploaded_file', filename=current_user.profile_image) if current_user.profile_image else url_for('static', filename='images/placeholder.png') }}"
+              alt="Foto de perfil"
+              class="h-6 w-6 rounded-full object-cover border border-gray-300"
+            >
+          </span>
+            {{ current_user.username }}
+            <span class="ml-1 px-2 py-0.5 bg-[#00C2FF]/20 rounded-full text-xs font-semibold">{{ current_user.role|capitalize }}</span>
+          </span>
+          <a href="{{ url_for('auth.logout') }}" class="px-4 py-1 bg-[#00C2FF] hover:bg-[#00A8D8] text-white rounded font-bold transition">Salir</a>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="px-4 py-1 bg-[#007BFF] hover:bg-[#005BB5] text-white rounded font-bold transition">Ingresar</a>
+          <a href="{{ url_for('auth.register') }}" class="px-4 py-1 bg-[#00C2FF] hover:bg-[#00A8D8] text-white rounded font-bold transition">Registrarse</a>
+        {% endif %}
+      </div>
+
+      <!-- Botón menú móvil -->
+      <button id="mobile-menu-btn" class="md:hidden flex items-center justify-center w-10 h-10 rounded focus:outline-none focus:ring-2 focus:ring-[#00C2FF]">
+        <svg class="w-7 h-7 text-[#007BFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Dropdown móvil (overlay animado) -->
+    <div id="mobile-menu"
+      class="fixed inset-0 bg-black/30 z-50 flex md:hidden transition-all duration-300 invisible opacity-0 pointer-events-none">
+      <div class="w-5/6 max-w-xs bg-white border-l border-[#e0e7ef] p-6 h-full flex flex-col gap-4 shadow-xl overflow-y-auto transition-transform duration-300 -translate-x-full" id="mobile-menu-panel">
+        <!-- Logo y cerrar -->
+        <div class="flex items-center justify-between mb-6">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PROSALUD Logo" class="h-10 w-auto">
+          <button id="mobile-menu-close" class="p-2 rounded-full hover:bg-[#f7fbff] focus:outline-none">
+            <i class="fas fa-times text-2xl text-[#007BFF]"></i>
+          </button>
+        </div>
+        {% if current_user.is_authenticated %}
+          {% if current_user.role == 'professional' %}
+            <a href="{{ url_for('professional.dashboard') }}" class="mobilelink">Inicio</a>
+            <a href="{{ url_for('professional.services') }}" class="mobilelink">Servicios</a>
+            <a href="{{ url_for('professional.requests_list') }}" class="mobilelink">Solicitudes</a>
+            <a href="{{ url_for('professional.availability') }}" class="mobilelink">Agenda</a>
+            <a href="{{ url_for('professional.reviews') }}" class="mobilelink">Reseñas</a>
+            <a href="{{ url_for('messages.inbox') }}" class="mobilelink">Mensajes</a>
+            <a href="{{ url_for('professional.profile') }}" class="mobilelink">Perfil</a>
+            <a href="{{ url_for('professional.history') }}" class="mobilelink">Historial</a>
+            <a href="{{ url_for('auth.logout') }}" class="mobilelink text-[#007BFF] font-bold">Salir</a>
+          {% elif current_user.role == 'client' %}
+            <a href="{{ url_for('client.dashboard') }}" class="mobilelink">Buscar</a>
+            <a href="{{ url_for('client.my_requests') }}" class="mobilelink">Mis Solicitudes</a>
+            <a href="{{ url_for('messages.inbox') }}" class="mobilelink">Mensajes</a>
+            <a href="{{ url_for('client.profile') }}" class="mobilelink">Mi Perfil</a>
+            <a href="{{ url_for('auth.logout') }}" class="mobilelink text-[#007BFF] font-bold">Salir</a>
+          {% endif %}
+        {% else %}
+          <a href="{{ url_for('main.index') }}" class="mobilelink">Inicio</a>
+          <a href="{{ url_for('client.dashboard') }}" class="mobilelink">Buscar Profesionales</a>
+          <a href="{{ url_for('main.public_professionals') }}" class="mobilelink">Explorar</a>
+          <a href="{{ url_for('main.contacto') }}" class="mobilelink">Contacto</a>
+          <a href="{{ url_for('auth.login') }}" class="mobilelink">Ingresar</a>
+          <a href="{{ url_for('auth.register') }}" class="mobilelink">Registrarse</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Espacio para no tapar el contenido -->
+  <div class="h-16"></div>
+
+  <main class="pt-2 pb-6 px-2 sm:px-0">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Script menú móvil mejorado -->
+  <script>
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const panel = document.getElementById('mobile-menu-panel');
+    const closeBtn = document.getElementById('mobile-menu-close');
+
+    function openMenu() {
+      menu.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        panel.classList.remove('-translate-x-full');
+      }, 30);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      panel.classList.add('-translate-x-full');
+      setTimeout(() => {
+        menu.classList.add('invisible', 'opacity-0', 'pointer-events-none');
+        document.body.style.overflow = '';
+      }, 250);
+    }
+
+    if (btn && menu && panel) {
+      btn.addEventListener('click', openMenu);
+    }
+    if (closeBtn && menu && panel) {
+      closeBtn.addEventListener('click', closeMenu);
+    }
+    // Cierra al hacer click fuera del panel
+    menu.addEventListener('click', function(e) {
+      if (e.target === menu) closeMenu();
+    });
+    // Escape para cerrar
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeMenu();
+    });
+  </script>
+  <style>
+    .navlink {
+      @apply px-2 py-2 text-[#164399] rounded hover:bg-[#f5faff] hover:text-[#276EF1] transition font-semibold;
+    }
+    .mobilelink {
+      @apply block px-4 py-3 rounded-xl text-[#164399] font-semibold text-base hover:bg-[#f5faff] hover:text-[#276EF1] transition;
+    }
+    @media (max-width: 700px) {
+      .h-16 { height: 56px !important;}
+      main { padding-left: 0 !important; padding-right: 0 !important;}
+    }
+  </style>
+</body>
+</html>

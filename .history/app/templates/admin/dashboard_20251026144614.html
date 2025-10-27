@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Panel de Administración – PROSALUD{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-[#f8fafc] py-10">
+  <div class="max-w-7xl mx-auto px-6">
+    <h1 class="text-3xl font-extrabold text-[#276EF1] mb-8 flex items-center gap-3">
+      <i class="fas fa-user-shield"></i> Panel de Administración
+    </h1>
+
+    <!-- Tabla de profesionales -->
+    <div class="bg-white shadow-lg rounded-2xl overflow-hidden border border-[#276EF1]/10">
+      <table class="w-full text-left">
+        <thead class="bg-[#276EF1]/10 text-[#276EF1] uppercase text-sm font-semibold">
+          <tr>
+            <th class="py-3 px-4">ID</th>
+            <th class="py-3 px-4">Nombre</th>
+            <th class="py-3 px-4">Email</th>
+            <th class="py-3 px-4">Especialidad</th>
+            <th class="py-3 px-4 text-center">Título / Certificado</th>
+            <th class="py-3 px-4 text-center">Calificación</th>
+            <th class="py-3 px-4 text-center">Registro</th>
+            <th class="py-3 px-4 text-center">Estado</th>
+            <th class="py-3 px-4 text-center">Acción</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-700">
+          {% for p in professionals %}
+          <tr class="border-b hover:bg-gray-50 transition">
+            <td class="py-3 px-4">{{ p.id }}</td>
+            <td class="py-3 px-4 font-semibold">{{ p.username }}</td>
+            <td class="py-3 px-4">{{ p.email }}</td>
+            <td class="py-3 px-4">{{ p.category or '—' }}</td>
+
+            <!-- Certificado -->
+            <td class="py-3 px-4 text-center">
+              {% if p.certificate_file %}
+                <a href="{{ url_for('static', filename='uploads/certificates/' ~ p.certificate_file) }}"
+                   target="_blank"
+                   class="text-blue-600 hover:underline font-semibold">
+                   Ver archivo
+                </a>
+              {% else %}
+                <span class="text-gray-400 italic">No subido</span>
+              {% endif %}
+            </td>
+
+            <!-- Promedio de calificación -->
+            <td class="py-3 px-4 text-center">
+              {% set promedio = (p.received_evaluations | map(attribute='rating') | list) %}
+              {% if promedio and promedio|length > 0 %}
+                {% set avg = (promedio | sum) / promedio|length %}
+                <span class="text-yellow-500 font-bold">
+                  ⭐ {{ '%.1f'|format(avg) }}
+                </span>
+              {% else %}
+                <span class="text-gray-400 italic">Sin reseñas</span>
+              {% endif %}
+            </td>
+
+            <!-- Fecha de registro -->
+            <td class="py-3 px-4 text-center">
+              {% if p.registration_date %}
+                {{ p.registration_date.strftime('%d/%m/%Y') }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+
+            <!-- Estado -->
+            <td class="py-3 px-4 text-center">
+              {% if p.active %}
+                <span class="text-green-600 font-semibold">Activo</span>
+              {% else %}
+                <span class="text-red-500 font-semibold">Pendiente</span>
+              {% endif %}
+            </td>
+
+            <!-- Acción -->
+            <td class="py-3 px-4 text-center">
+              {% if p.active %}
+                <a href="{{ url_for('admin.toggle_user', user_id=p.id) }}"
+                   class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-bold shadow transition">
+                   Desactivar
+                </a>
+              {% else %}
+                <a href="{{ url_for('admin.toggle_user', user_id=p.id) }}"
+                   class="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white text-sm font-bold shadow transition">
+                   Aprobar
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="9" class="text-center py-6 text-gray-500">No hay profesionales registrados.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}
